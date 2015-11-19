@@ -1,0 +1,53 @@
+package <%=nameSpace%>.repository.impl;
+
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.ehsure.eaf.core.dto.PageReq;
+import com.ehsure.eaf.core.repository.jpa.BaseHibernateRepository;
+import com.ehsure.eaf.core.utils.StringUtil;
+import <%=nameSpace%>.dto.Operator;
+import <%=nameSpace%>.entity.<%=entityName%>;
+import <%=nameSpace%>.repository.<%=entityName%>Repository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Repository;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Objects;
+
+/**
+ * Created by CodeGenjs on <%=new Date()%>.
+ */
+@Repository
+public class <%=entityName%>RepositoryImpl extends BaseEbdRepository<<%=entityName%>> implements <%=entityName%>Repository{
+
+    /**
+     * 根据Code获取<%=entityName%>
+     * @param code
+     * @return
+     */
+    @Override
+    public <%=entityName%> getByCode(String code){
+        String hql="from <%=entityName%> where code=:code";
+        HashMap<String,Object> kvList=new HashMap<>();
+        kvList.put("code",code);
+        return super.findOneEntityObject(hql,kvList);
+    }
+    /**
+     * 分页获取集合
+     * @param pageReq 分页参数
+     * @return 集合
+     */
+    @Override
+    public Page<<%=entityName%>> getPageList(PageReq pageReq) {
+        Pageable pageable = new PageRequest(pageReq.getPageIndex() - 1, pageReq.getPageSize());
+        String queryDict = (String) pageReq.getConditions().get("queryDict");
+        HashMap<String, Object> kvList = new HashMap<>();
+        String hql = "from <%=entityName%> where id is not null ";
+        hql = buildSql(kvList, queryDict, hql);
+        return this.findEntityObjects(hql, kvList, pageable);
+    }
+}

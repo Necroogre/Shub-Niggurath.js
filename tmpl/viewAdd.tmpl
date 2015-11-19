@@ -1,0 +1,62 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="tag" tagdir="/WEB-INF/tags"%>
+<html>
+<head>
+  <title></title>
+  <tag:header />
+</head>
+<body id="main_layout"  >
+<div class="winContainer">
+  <form id="formMain" action=<$print('"${pageContext.request.contextPath}/api/'+_.last(nameSpace.split('.')).toLowerCase()+'/'+ allLowerCaseEntityName +'/add"')$> method="post" >
+    <div class="btnBar">
+      <a id="btnSave" href="javascript:void(0)" class="easyui-linkbutton" plain="true" iconcls="icon-save" >保存</a>
+    </div>
+    <table class="table1">
+      <$ 
+        var propertyCount = columns.length;
+        var rowCount = parseInt(propertyCount / 2) + 1;
+        for (var row = 0; row < rowCount; row ++ ) { 
+          print('<tr>');
+          for (var col = 0; col < 2; col ++) {
+            var index = (row) * 2 + col;
+            
+            if(columns[index]) {
+              print('<th>');
+              print(columns[index].desc + '：');
+              if (!columns[index].nullable) { print('<span class="needStar">*</span>') }
+              print('</th>');
+              print('<td>');
+              print('<input name="' + columns[index].lowerCaseName + '" class="easyui-validatebox" data-options="required:' + (columns[index].nullable == 'true' ? 'false' : 'true') + '" type="text" />');
+              print('</td>');
+            }
+          } 
+          print('</tr>')
+        }
+      $>
+    </table>
+  </form>
+</div>
+</body>
+</html>
+
+<script type="text/javascript">
+  $(function() {
+    /*表单数据加载成功的事件处理函数*/
+    function onFormLoadSuccess(data) {
+
+    }
+
+    var formData = {};
+    //构造pageform（主数据）
+    var easyUIFormParams = {onLoadSuccess: onFormLoadSuccess};
+    var url = null;
+    var pageForm = new PageForm('formMain', url, easyUIFormParams, null, function (data) {
+    }, null, 'edit');
+    //初始化
+    pageForm.init().loadForm(formData);
+
+    $('#btnSave').on('click', function () {
+      pageForm.submitForm()
+    });
+  });
+</script>

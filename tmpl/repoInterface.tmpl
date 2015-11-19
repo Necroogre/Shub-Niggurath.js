@@ -1,0 +1,21 @@
+package <%=nameSpace%>.repository;
+
+import com.ehsure.eaf.core.dto.PageReq;
+import com.ehsure.eaf.core.repository.BaseCrudRepository;
+import <%=nameSpace%>.entity.<%=entityName%>;
+import org.springframework.data.domain.Page;
+
+/**
+ * Created by CodeGenjs on <%=new Date()%>.
+ */
+public interface <%=entityName%>Repository extends BaseCrudRepository<<%=entityName%>>{
+
+    <%=entityName%>  getByCode(String Code);
+
+    /**
+     * 分页获取集合
+     * @param pageReq 分页参数
+     * @return 集合
+     */
+    Page<<%=entityName%>> getPageList(PageReq pageReq);    
+}

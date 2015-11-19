@@ -1,0 +1,19 @@
+{
+  "entity": {
+    "fileName": "<%= entityName %>.cs",
+    "pathName": "./ebd-core/src/main/java/com/ehsure/ebd/entity"
+  },
+  "repoInterface": {
+    "fileName": "I<%= entityName %>Repository.cs",
+    "pathName": "**/repository/impl"
+  },
+  "repo": {
+    "fileName": "<%= entityName %>Repository.cs",
+    "pathName": "**/repository"
+  },
+  "controller": {
+    "fileName": "<%= entityName %>Repository.cs",
+    "pathName": "**/controller"
+  }  
+ 
+}

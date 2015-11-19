@@ -1,0 +1,168 @@
+@{
+}
+
+<table id="dg" title=" " fit="true"
+       toolbar="#toolbar" pagination="true" idfield="Id"
+       rownumbers="true" fitcolumns="true" fixed="true" singleselect="false"
+       pagesize="20">
+    <thead>
+        <tr>
+            <th field="ck"
+                checkbox="true"></th>
+            <th field='Id'
+                hidden='hidden'></th>
+            @Html.Partial("ViewFromCfg/_ListSection")
+        </tr>
+    </thead>
+</table>
+
+<div id="toolbar">
+    <form id="queryForm" action="" method="POST">
+        <div class="searchbox-area">
+            <table class="searchbox-body">
+                @Html.Partial("ViewFromCfg/_QuerySection")
+            </table>
+            <div class="searchbox-flip">
+                <a class="searchbox-flipBtn" href="#" onclick="clickMore(this)">更多条件</a>
+                <a id="aquery" href="#" class="easyui-linkbutton" iconcls="icon-search" onclick="doQuery()">查询</a>
+                &nbsp;&nbsp;
+                <a id="aquery" href="#" class="easyui-linkbutton" iconcls="icon-undo" onclick="clearForm()">重置</a>
+            </div>
+        </div>
+    </form>
+    <div class="toolbar-btnBar">
+        @Html.Partial("_OpPermission")
+    </div>
+
+</div>
+@* 弹出层 *@
+<div id="dd"></div>
+<div id="_sdialog" resizable="true"></div>
+<script type="text/javascript">
+    if ($.fn.lookup) $("a[lookupGroup]", $(document)).lookup();//初始化查找找回功能
+    function clearForm() {
+        $('#queryForm').form('reset');
+    }
+
+    $(function () {
+        $('#dg').datagrid({
+            url: '@Url.Action("List")',
+            queryParams: {
+                qDic: JSON.stringify(Ehsure.Common.getQueryParams())
+            }
+        });
+    });
+
+    function doQuery(reload) {
+        var loadType = reload ? "reload" : "load";
+        $('#dg').datagrid(loadType, {
+            qDic: JSON.stringify(Ehsure.Common.getQueryParams())
+        });
+        $('#dg').datagrid("clearSelections");
+    }
+
+    function onAdd() {
+        $(window.parent.addTab("添加<%= entityNameDesc %>", '@(Url.Action("Add")'));
+    }
+
+    function onView() {
+        var detailUrl = "@Url.Action("Detail")";
+        var rows = $('#dg').datagrid('getSelections');
+        if (!rows || rows.length == 0) {
+            $.messager.alert('警告', "请选择数据！", "warning");
+            return;
+        }
+        if (rows.length > 1) {
+            $.messager.alert('警告', "只能选择一行数据！", "warning");
+            return;
+        }
+        var row = rows[0];
+        detailUrl += "?id=" + row.Id;
+        $(window.parent.addTab("查看<%= entityNameDesc %>", detailUrl));
+    }
+
+
+   
+    function onImport() {
+        $('#dd').dialog({
+            title: '导入<%= entityNameDesc %>',
+            width: 600,
+            height: 400,
+            closed: false,
+            cache: false,
+            href: '@Url.Action("Import")',
+            modal: true,
+            resizable: true
+        });
+    }
+
+    function onEdit() {
+        var detailUrl = "@Url.Action("Edit")";
+        var rows = $('#dg').datagrid('getSelections');
+        if (!rows || rows.length == 0) {
+            $.messager.alert('警告', "请选择数据！", "warning");
+            return;
+        }
+        if (rows.length > 1) {
+            $.messager.alert("警告", "只能选择一行数据！", "warning");
+            return;
+        }
+        var row = rows[0];
+        detailUrl += "?id=" + row.Id;
+        $(window.parent.addTab("<%= entityNameDesc %>", detailUrl));
+    }
+    function onDelete() {
+        var rows = $('#dg').datagrid('getSelections');
+        if (!rows || rows.length == 0) {
+            $.messager.alert('警告', "请选择数据！", "warning");
+            return;
+        } else {
+            $.messager.confirm("确认操作", "确认要删除吗？", function (r) {
+                if (r) {
+                    deleteItems();
+                }
+            });
+        }
+    }
+    function deleteItems() {
+        var ss = [];
+        var rows = $('#dg').datagrid('getSelections');
+        if (!rows || rows.length == 0) {
+            $.messager.alert('Info', "请选择数据！", "warning");
+            return;
+        }
+        for (var i = 0; i < rows.length; i++) {
+            var row = rows[i];
+            ss.push({ name: "ids", value: row.Id });
+        }
+
+        $.ajax({
+            type: 'post',
+            url: '@Url.Action("Delete")',
+            data: ss,
+            success: function (d) {
+                $.messager.alert('提示', d);
+                if (d == "删除成功") {
+                    doQuery(true);
+                }
+            }
+        });
+    }
+
+
+    function onExport() {
+        var form = $("<form>");//定义一个form表单
+        form.attr("style", "display:none");
+        form.attr("target", "");
+        form.attr("method", "post");
+        form.attr("action", '@Url.Action("Export")');
+        var input1 = $("<input>");
+        input1.attr("type", "hidden");
+        input1.attr("name", "qDic");
+        input1.attr("value", JSON.stringify(Ehsure.Common.getQueryParams()));
+        form.append(input1);
+        $("body").append(form);
+        form.submit();//表单提交
+    }
+</script>
+

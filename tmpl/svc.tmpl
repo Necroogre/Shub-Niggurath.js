@@ -1,0 +1,36 @@
+using Ehsure.ADRP.Core.Ehsure.ADRP.Core;
+using Ehsure.ADRP.Core.Repositories;
+using Ehsure.ADRP.DTO;
+using Ehsure.ADRP.DTO.Export;
+using Ehsure.ADRP.Entities;
+using Ehsure.Core.Services;
+using System.IO;
+using CsvHelper.Configuration;
+using CsvHelper;
+using Ehsure.BP.Core.Services;
+
+namespace Ehsure.ADRP.Core.Services
+{
+    public class <%= entityName %>Service : CrudService<<%= entityName %>>, I<%= entityName %>Service
+    {
+        private I<%= entityName %>Repository _repo;
+        public <%= entityName %>Service(I<%= entityName %>Repository repository)
+            : base(repository)
+        {
+            _repo = repository;
+        }
+
+        public List<Dictionary<string, string>> GetPageListDynamicArgs(
+            int page,
+            int rows,
+            out int total,
+            Dictionary<string, QueryItem> handledArgs,
+            Dictionary<string, RankItem> rankDic)
+        {
+            return Util.DataTableToList(
+                    _repo.GetPageListDynamicArgs(page, rows, out total, handledArgs, rankDic));
+        }
+
+    }
+
+}

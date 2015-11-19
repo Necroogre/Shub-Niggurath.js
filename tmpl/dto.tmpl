@@ -1,0 +1,25 @@
+package <%=nameSpace%>.dto;
+
+import com.ehsure.eaf.core.dto.BaseDTO;
+import java.math.BigDecimal;
+import java.util.Date;
+
+/**
+ * Created by CodeGenjs on <%=new Date()%>.
+ */
+public class <%= entityName %>DTO {
+    <% columns.forEach(function (prop) {%>
+        private <%= prop.javaType %> <%= prop.lowerCaseName %>;
+    <% }) %>
+    <% columns.forEach(function (prop) { %>
+        /**
+         * <%= prop.desc %>
+         */
+        public <%= prop.javaType %> get<%= prop.name %>(){
+              return <%= prop.lowerCaseName %>;
+        }
+        public void set<%= prop.name %>(<%= prop.javaType %> <%= prop.lowerCaseName %>){
+              this.<%= prop.lowerCaseName %> = <%= prop.lowerCaseName %>;
+        }
+    <% }) %>
+}

@@ -1,0 +1,46 @@
+package <%=nameSpace%>.appservice;
+
+import com.ehsure.eaf.core.dto.APIResult;
+import com.ehsure.eaf.core.dto.PageReq;
+import com.ehsure.eaf.core.dto.PageResult;
+import <%=nameSpace%>.dto.<%=entityName%>DTO;
+
+/**
+ * Created by CodeGenjs on <%=new Date()%>.
+ */
+public interface <%=entityName%>AppService {
+    /**
+     * 获取<%=entityName%>
+     * @param id
+     * @return
+     */
+    APIResult<<%=entityName%>DTO> getById(String id);
+
+    /**
+     * 添加<%=entityName%>
+     * @param <%=lowerCaseEntityName%>DTO
+     * @return
+     */
+    APIResult<String> create(<%=entityName%>DTO <%=lowerCaseEntityName%>DTO);
+
+    /**
+     * 修改<%=entityName%>
+     * @param <%=lowerCaseEntityName%>DTO
+     * @return
+     */
+    APIResult<String> update(<%=entityName%>DTO <%=lowerCaseEntityName%>DTO);
+
+    /**
+     * 删除<%=entityName%>
+     * @param id
+     * @return
+     */
+    APIResult<String> delete(String id);
+
+    /**
+     * 分页获取集合
+     * @param pageReq 分页参数
+     * @return <%=entityName%>DTO集合
+     */
+    APIResult<PageResult<<%=entityName%>DTO>>  getPageList(PageReq pageReq);    
+}

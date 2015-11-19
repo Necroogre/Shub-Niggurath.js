@@ -1,0 +1,34 @@
+package <%=nameSpace%>.entity;
+
+import com.ehsure.eaf.core.entity.BaseUuidAuditableEnity;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import java.math.BigDecimal;
+import java.util.Date;
+
+/**
+ * Created by CodeGenjs on <%=new Date()%>.
+ */
+@Entity
+@Table(name="<% print(_.last(nameSpace.split('.')).toLowerCase())%><%=entityName %>")
+public class <%= entityName %> extends BaseUuidAuditableEnity{
+    <% columns.forEach(function (prop) {
+    var lengthTemp=""; if(prop.length!=null){lengthTemp=",length = "+prop.length} 
+    var precisionTemp=""; if(prop.precision!=null){precisionTemp=",precision = "+prop.precision}
+    var scaleTemp=""; if(prop.scale!=null){scaleTemp=",scale = "+prop.scale} %>
+        @Column(nullable = <%=prop.nullable%><%=lengthTemp%><%=precisionTemp%><%=scaleTemp%>)
+        private <%= prop.javaType %> <%= prop.lowerCaseName %>;
+    <% }) %>
+    <% columns.forEach(function (prop) { %>
+        /**
+         * <%= prop.desc %>
+         */
+        public <%= prop.javaType %> get<%= prop.name %>(){
+              return <%= prop.lowerCaseName %>;
+        }
+        public void set<%= prop.name %>(<%= prop.javaType %> <%= prop.lowerCaseName %>){
+              this.<%= prop.lowerCaseName %> = <%= prop.lowerCaseName %>;
+        }
+    <% }) %>
+}

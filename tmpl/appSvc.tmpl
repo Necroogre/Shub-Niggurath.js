@@ -1,0 +1,120 @@
+package <%=nameSpace%>.appservice.impl;
+
+import com.ehsure.eaf.core.dto.APIResult;
+import com.ehsure.eaf.core.dto.PageReq;
+import com.ehsure.eaf.core.dto.PageResult;
+import <%=nameSpace%>.appservice.<%=entityName%>AppService;
+import <%=nameSpace%>.dto.<%=entityName%>DTO;
+import <%=nameSpace%>.entity.<%=entityName%>;
+import <%=nameSpace%>.entity.Warehouse;
+import <%=nameSpace%>.repository.<%=entityName%>Repository;
+import org.dozer.DozerBeanMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.stereotype.Service;
+import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+/**
+ * Created by CodeGenjs on <%=new Date()%>.
+ */
+@Service
+public class <%=entityName%>AppServiceImpl implements <%=entityName%>AppService{
+    @Resource
+    private <%=entityName%>Repository repo;
+<%=console.log("lowerCase:",lowerCaseEntityName) %>
+    /**
+     * 获取<%=entityName%>
+     * @param id
+     * @return
+     */
+     @Override
+     public APIResult<<%=entityName%>DTO> getById(String id){
+        APIResult<<%=entityName%>DTO> result=new APIResult<>();
+        <%=entityName%> <%=lowerCaseEntityName%>=repo.load(id);
+        if(<%=lowerCaseEntityName%>==null){
+            return result.fail(404,"not found");
+        }
+        <%=entityName%>DTO <%=lowerCaseEntityName%>DTO=build<%=entityName%>DTO(<%=lowerCaseEntityName%>);
+        return result.succeed().attachData(<%=lowerCaseEntityName%>DTO);
+     }
+
+    /**
+     * 构造DTO
+     * @param <%=lowerCaseEntityName%>
+     * @return
+     */
+    private <%=entityName%>DTO build<%=entityName%>DTO(<%=entityName%> <%=lowerCaseEntityName%>){
+        DozerBeanMapper mapper=new DozerBeanMapper();
+        <%=entityName%>DTO <%=lowerCaseEntityName%>DTO = mapper.map(<%=lowerCaseEntityName%>, <%=entityName%>DTO.class);
+        return <%=lowerCaseEntityName%>DTO;
+    }
+
+    /**
+     * 添加<%=entityName%>
+     * @param <%=lowerCaseEntityName%>DTO
+     * @return
+     */
+    @Override
+    public APIResult<String> create(<%=entityName%>DTO <%=lowerCaseEntityName%>DTO){
+        APIResult<String> result=new APIResult<>();
+        DozerBeanMapper mapper=new DozerBeanMapper();
+        <%=entityName%> <%=lowerCaseEntityName%>=mapper.map(<%=lowerCaseEntityName%>DTO,<%=entityName%>.class);
+
+        repo.insert(<%=lowerCaseEntityName%>);
+        return result.succeed().attachData(<%=lowerCaseEntityName%>.getId());
+    }    
+
+    /**
+     * 修改<%=entityName%>
+     * @param <%=lowerCaseEntityName%>DTO
+     * @return
+     */
+    @Override
+    public APIResult<String> update(<%=entityName%>DTO <%=lowerCaseEntityName%>DTO){
+        APIResult<String> result=new APIResult<>();
+        <%=entityName%> <%=lowerCaseEntityName%> = repo.load(<%=lowerCaseEntityName%>DTO.getId());
+        if (<%=lowerCaseEntityName%>==null){
+            return result.fail(404, "not find");
+        }
+        <%=lowerCaseEntityName%>.setEditTime(new Date());
+        repo.save(<%=lowerCaseEntityName%>);
+        return result.succeed();
+    } 
+
+    /**
+     * 删除<%=entityName%>
+     * @param id
+     * @return
+     */
+    @Override
+    public APIResult<String> delete(String id){
+        APIResult<String> result=new APIResult<>();
+        <%=entityName%> <%=lowerCaseEntityName%>=repo.load(id);
+        if(<%=lowerCaseEntityName%>!=null){
+            repo.delete(<%=lowerCaseEntityName%>);
+        }
+        return result.succeed();
+    }  
+    
+    /**
+     * 分页获取集合
+     * @param pageReq 分页参数
+     * @return <%=entityName%>DTO集合
+     */
+    @Override
+    public APIResult<PageResult<<%=entityName%>DTO>>  getPageList(PageReq pageReq){
+        Page<<%=entityName%>> page = repo.getPageList(pageReq);
+        PageResult<<%=entityName%>DTO> pageResult = new PageResult();
+        pageResult.setTotal(page.getTotalElements());
+        List<<%=entityName%>DTO> list=new ArrayList<>();
+        for(<%=entityName%> data:page.getContent()){
+            list.add(build<%=entityName%>DTO(data));
+        }
+        pageResult.setRows(list);
+        APIResult<PageResult<<%=entityName%>DTO>> result=new APIResult<>();
+        result.succeed().attachData(pageResult);
+        return result;
+    }          
+}

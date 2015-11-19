@@ -1,0 +1,7 @@
+{
+    "user": "sa",
+    "password": "pwd",
+    "server": "host",
+    "database": "dbName",
+    "path":"/path/to/your/project/dir"
+}

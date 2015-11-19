@@ -1,0 +1,20 @@
+{
+	"csharp": {
+		"varchar": "string",
+		"datetime": "DateTime",
+		"int": "int",
+		"nvarchar": "string",
+		"bit": "bool",
+		"datetime2": "DateTime",
+		"decimal": "decimal"
+	},
+	"java": {
+		"varchar": "String",
+		"nvarchar": "String",
+		"datetime": "Date",
+		"datetime2": "Date",
+		"int": "int",
+		"decimal": "BigDecimal",
+		"bit": "boolean"
+	}
+}

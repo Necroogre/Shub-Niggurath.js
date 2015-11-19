@@ -1,0 +1,61 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="tag" tagdir="/WEB-INF/tags"%>
+<html>
+<head>
+  <title></title>
+  <tag:header />
+</head>
+<body id="main_layout"  >
+<div class="winContainer">
+  <form id="formMain">
+    <table class="table1">
+      <$ 
+        var propertyCount = columns.length;
+        var rowCount = parseInt(propertyCount / 2) + 1;
+        for (var row = 0; row < rowCount; row ++ ) { 
+          print('<tr>');
+          for (var col = 0; col < 2; col ++) {
+            var index = (row) * 2 + col;
+            
+            if(columns[index]) {
+              print('<th>');
+              print(columns[index].desc + '：');
+              print('</th>');
+              print('<td>');
+              print('<input name="' + columns[index].lowerCaseName + '" readonly="readonly" style="border: none;" type="text" />');
+              print('</td>');
+            }
+          } 
+          print('</tr>')
+        }
+      $>
+    </table>
+  </form>
+</div>
+</body>
+</html>
+
+<script type="text/javascript">
+  $(function(){
+    /*表单数据加载成功的事件处理函数*/
+    function onFormLoadSuccess(data){
+      if(data.inUse)
+      {
+        $("input:radio[name='inUse']").eq(0).attr("checked",'checked');
+      }
+      else
+      {
+        $("input:radio[name='inUse']").eq(1).attr("checked",'checked');
+      }
+    }
+
+    //构造pageform（主数据）
+    var easyUIFormParams={onLoadSuccess:onFormLoadSuccess};
+    var url=<$print("'${pageContext.request.contextPath}/api/"+_.last(nameSpace.split('.')).toLowerCase()+"/"+ allLowerCaseEntityName +"?id=${model.id}'")$>;
+    var pageForm=new PageForm('formMain',url,easyUIFormParams,null,function(data){
+      //主数据请求完后同时得到其子数据，渲染子数据
+    });
+    //初始化
+    pageForm.init().loadForm();
+  });
+</script>
