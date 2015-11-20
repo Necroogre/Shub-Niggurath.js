@@ -1,37 +1,40 @@
 var fs = require('fs');
 var _ = require('underscore');
-var DataSourceConfig = (function () {
-    function DataSourceConfig(cfgFilePath) {
+var DataSourceHelper = (function () {
+    function DataSourceHelper(cfgFilePath) {
         var cfgContent = fs.readFileSync(cfgFilePath, 'utf8');
-        this.configurations = JSON.parse(cfgContent);
+        this.dataSources = JSON.parse(cfgContent);
+        this.cfgFilePath = cfgFilePath;
     }
-    DataSourceConfig.prototype.getConfig = function (projectPath) {
-        console.log('[DEBUG] #DataSourceConfig.getConfig()', projectPath);
+    DataSourceHelper.prototype.getDataSource = function (projectPath) {
+        console.log('[DEBUG] #DataSourceHelper.getConfig()', projectPath);
         var d = {};
-        for (var key in this.configurations) {
-            if (key === projectPath) {
-                console.log('[DEBUG] #DataSourceConfig.getConfig(), found [key]: ', key, this.configurations[key]);
-                d = this.dataSourceFactory(key, this.configurations[key]);
+        for (var key in this.dataSources) {
+            if (this.dataSources[key].projectPath === projectPath) {
+                console.log('[DEBUG] #DataSourceHelper.getDataSource(), found [key]: ', key, this.dataSources[key]);
+                d = this.dataSourceFactory(projectPath, this.dataSources[key]);
                 break;
             }
         }
         if (!d.projectPath) {
-            console.log('[DEBUG] #DataSourceConfig.getConfig(), not found [key]: ', projectPath);
+            console.log('[DEBUG] #DataSourceHelper.getDataSource(), not found [key]: ', projectPath);
             d = this.dataSourceFactory(projectPath, {});
         }
+        console.log('[DEBUG] #DataSourceHelper.getDataSource() result', projectPath, d);
         return d;
     };
-    DataSourceConfig.prototype.setConfig = function (config) {
-        var existed = _.find(this.configurations, function (x) { return x.projectPath === config.projectPath; });
+    DataSourceHelper.prototype.setDataSource = function (config) {
+        var existed = _.find(this.dataSources, function (x) { return x.projectPath === config.projectPath; });
         if (existed) {
             existed = config;
         }
         else {
-            this.configurations.push(config);
+            this.dataSources.push(config);
         }
-        fs.writeFileSync(this.cfgFilePath, JSON.stringify(this.configurations), { encoding: 'utf8' });
+        console.log('[DEBUG] #DataSourceHelper.setDataSource():', config, this.cfgFilePath);
+        fs.writeFileSync(this.cfgFilePath, JSON.stringify(this.dataSources), { encoding: 'utf8' });
     };
-    DataSourceConfig.prototype.dataSourceFactory = function (projPath, configObj) {
+    DataSourceHelper.prototype.dataSourceFactory = function (projPath, configObj) {
         var d = {};
         switch (configObj.type) {
             case 'sqlserver':
@@ -45,9 +48,9 @@ var DataSourceConfig = (function () {
         }
         return d;
     };
-    return DataSourceConfig;
+    return DataSourceHelper;
 })();
-exports.DataSourceConfig = DataSourceConfig;
+exports.DataSourceHelper = DataSourceHelper;
 var SqlServerDataSource = (function () {
     function SqlServerDataSource(projPath, obj) {
         console.log('[DEBUG] #SqlServerDataSource.constructor()', projPath, obj);
@@ -56,6 +59,7 @@ var SqlServerDataSource = (function () {
         this.database = obj.database;
         this.user = obj.user;
         this.password = obj.password;
+        console.log('[DEBUG] #SqlServerDataSource.constructor()', projPath, this);
     }
     SqlServerDataSource.prototype.getEntities = function () {
         return new Promise(function (resolve, reject) {
@@ -64,6 +68,19 @@ var SqlServerDataSource = (function () {
     };
     return SqlServerDataSource;
 })();
+exports.SqlServerDataSource = SqlServerDataSource;
+var JSONDataSource = (function () {
+    function JSONDataSource(projPath) {
+        this.projectPath = projPath;
+    }
+    JSONDataSource.prototype.getEntities = function () {
+        return new Promise(function (resolve, reject) {
+            resolve([]);
+        });
+    };
+    return JSONDataSource;
+})();
+exports.JSONDataSource = JSONDataSource;
 var Entity = (function () {
     function Entity() {
     }
@@ -75,3 +92,4 @@ var Property = (function () {
     return Property;
 })();
 //export = Config; 
+//# sourceMappingURL=cfg.js.map

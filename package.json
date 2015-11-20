@@ -12,6 +12,7 @@
     "bootstrap": "^3.3.5",
     "fs-extra": "^0.26.2",
     "glob": "^6.0.1",
+    "jquery": "^2.1.4",
     "mkdirp": "^0.5.1",
     "mssql": "^2.3.2",
     "underscore": "^1.8.3",

@@ -47,7 +47,7 @@ app.on('ready', function () {
 	var webContents = mainWindow.webContents;
 	webContents.on('did-finish-load', function () {
 		argv.path = argv.path ? path.resolve(argv.path) : "";
-		cfgHelper = new configHelper.DataSourceConfig('./cfg/config.json');
+		cfgHelper = new configHelper.DataSourceHelper('./cfg/config.json');
 		var cfgObj = cfgHelper.getConfig(argv.path);
 		webContents.send('paras', cfgObj);
 	});

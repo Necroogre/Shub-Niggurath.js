@@ -6,9 +6,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!--<script type="text/javascript" src="render/jquery-2.1.4.min.js"></script>-->
-    <script type="text/javascript" src="render/underscore-min.js"></script>
-
+    <link rel="stylesheet" href="node_modules\bootstrap\dist\css\bootstrap.min.css">
     <title>CodeGenerator</title>
     <style type="text/css">
         ul {
@@ -194,12 +192,12 @@
 </script>
 <script>
     var ipc = require('ipc');
-    var $ = window.$ = jQuery=require('./render/jquery-1.11.3.min.js');
+    var $ = window.$ = jQuery=require('./node_modules/jquery/dist/jquery.js');
+    var _ = window._ = underscore = require('./node_modules/underscore/underscore.js');
     require('./node_modules/bootstrap/dist/js/bootstrap.min.js');
 
 </script>
 <!--<script type="text/javascript" src="node_modules\bootstrap\dist\js\bootstrap.min.js"></script>-->
-<link rel="stylesheet" href="node_modules\bootstrap\dist\css\bootstrap.min.css">
 <script type="text/javascript">
     var tableList=[];
     var selectedList=[];
