@@ -26,6 +26,7 @@
               if (!columns[index].nullable) { print('<span class="needStar">*</span>') }
               print('</th>');
               print('<td>');
+              columns[index].lowerCaseName = columns[index].name[0].toLowerCase() + columns[index].name.slice(1);
               print('<input name="' + columns[index].lowerCaseName + '" class="easyui-validatebox" data-options="required:' + (columns[index].nullable == 'true' ? 'false' : 'true') + '" type="text" />');
               print('</td>');
             }

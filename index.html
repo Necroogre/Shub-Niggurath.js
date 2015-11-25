@@ -176,8 +176,9 @@
 
 </html>
 <script type="text/template" id="li-template">
+    <% var fk=""; var info="";if(hasFK){fk="FK"; info=fkInfo;} %>
     <a id="<%=entityName%>" href="#" onclick="select(this)" class="list-group-item">
-        <%=entityName%>
+        <%=entityName%>         <span style="float:right" data-toggle="tooltip" data-placement="right" title="<%=info%>"><%=fk%></span>
     </a>
 </script>
 <script type="text/template" id="log-li-template">
@@ -204,6 +205,7 @@
 
 
     ipc.on('paras', function(arg) {
+        console.log("init",arg);
         $('#server').val(arg.server);
         $('#database').val(arg.database);
         $('#username').val(arg.user);
@@ -233,16 +235,27 @@
             namespaceStr:namespaceStr
         };
         console.log(obj);
-        ipc.send('mssql', obj);
+        ipc.send('getEntities', obj);
     }
 
-    ipc.on('mstable',function(res){ 
+    ipc.on('getEntities-reply',function(res){ 
         if(res=="fail"){
             $('#settingDiv').show("slow");
             $('#listDiv').hide('slow');  
             alert('请检查参数是否正确');
-        }    
-        tableList=res;
+        }
+        var array=[];
+        for(var i=0;i<res.length;i++){
+            var arrayItem={entityName:res[i].name,hasFK:false};
+            if(res[i].references.length>0){
+                var ref=res[i].references[0];
+                arrayItem.hasFK=true;
+                arrayItem.fkInfo=ref.propertyName+"<--->"+ref.refEntityName+"."+ref.refPropertyName;
+            }
+            array.push(arrayItem);     
+        }
+        tableList=array;
+        selectedList=[];
         refreshList();
         $('#listDiv').show('slow');    
     });
@@ -325,7 +338,7 @@
     }
 
     function goRight(){
-        var sList=$('.list-group-item-info');
+        var sList=$('a.list-group-item-info');
         sList.each(function (i,v){
             var item=_.find(tableList,function(x){
                return x.entityName==v.id;
@@ -339,7 +352,7 @@
     }
 
     function goLeft(){
-        var sList=$('.list-group-item-danger');
+        var sList=$('a.list-group-item-danger');
         sList.each(function (i,v){
             var item=_.find(selectedList,function(x){
                return x.entityName==v.id;

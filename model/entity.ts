@@ -15,4 +15,19 @@ export default class Entity {
 			}
 		});
 	}
+	
+	getJSONObject():any{
+		return {
+			name: this.name,
+			primaryKey: this.primaryKey,
+			properties: this.properties,
+			references: this.references.map((ref)=>{
+				return {
+					propertyName: ref.propertyName,
+					refPropertyName: ref.refPropertyName,
+					refEntityName: ref.refEntity.name
+				};
+			})
+		};
+	}
 }

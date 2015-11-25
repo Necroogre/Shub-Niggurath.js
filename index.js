@@ -48,7 +48,8 @@ app.on('ready', function () {
 	webContents.on('did-finish-load', function () {
 		argv.path = argv.path ? path.resolve(argv.path) : "";
 		cfgHelper = new configHelper.DataSourceHelper('./cfg/config.json');
-		var cfgObj = cfgHelper.getConfig(argv.path);
+		var cfgObj = cfgHelper.getDataSource(argv.path).getConfigObj();
+		console.log(cfgObj);
 		webContents.send('paras', cfgObj);
 	});
 	// Emitted when the window is closed.
@@ -68,6 +69,9 @@ var mssql = require('mssql');
 var _ = require('underscore');
 var tmpl = require('./cfg/templates.json');
 var sqlTypeDict = require('./cfg/sqlTypeDict.json');
+var SqlServerDataSource = require('./data_source/sqlServerDataSource').default;
+// var TemplateHelper = require('../templateHelper');
+
 
 var genPath = "";
 
@@ -96,41 +100,64 @@ function initTmpl() {
 
 var count = -1;
 var conn = {};
-var mssqlEvent;
+var entitiesGlobal=[];
 
 ipc.on('devTool', function (event, arg) {
 	mainWindow.webContents.openDevTools();
 });
 
-ipc.on('mssql', function (event, arg) {
+ipc.on('getEntities', function (event, arg) {
 	if (Object.keys(arg)[0].length === 0) {
-		return;
+		event.sender.send('getEntities-reply', "fail");
 	}
 	console.log('mssql paras:', arg);
-	
-	cfgHelper.setConfig(arg[Object.keys(arg)[0]]);
+	var ds = new SqlServerDataSource(Object.keys(arg)[0], arg[Object.keys(arg)[0]]);
+	cfgHelper.setDataSource(ds);
 
-	var mssqlCfg = arg[Object.keys(arg)[0]];
-	mssqlEvent = event;
-	conn = new mssql.Connection(mssqlCfg);
-	conn.connect()
-		.then(getTables)
-		.then(sendTables, fail);
+	ds.getEntities().then(function (entities) {
+		entitiesGlobal=entities;
+		console.log("entitiesGlobal:",entities[0].properties);
+		event.sender.send('getEntities-reply', entities.map(function (entity) {
+			return entity.getJSONObject();
+		}));
+	});
 });
-function sendTables(tables) {
-	console.log('get success', tables.length);
-	mssqlEvent.sender.send('mstable', tables);
-}
-function fail() {
-	console.log('get fail');
-	mssqlEvent.sender.send('mstable', "fail");
-}
 
-var nameSpaceStr="";
-ipc.on('selectedList', function (event, selected, genPath, nameSpace) {
-	nameSpaceStr=nameSpace;
+
+ipc.on('selectedList', function (event, entityNameList, genPath, nameSpace) {
 	count = Object.keys(tmpl).length;
 	console.log("path", genPath);
+	//获取用户选择的Entity[]
+	var entities = TemplateHelper.getEntitiesByNameList(entitiesGlobal,entityNameList);
+
+	// //获取所有模板
+	// var tmplList = tmpl
+	//匹配所有模板路径
+	var tmplObjAbs = TemplateHelper.setAbsolutePath(tmpl);
+
+	entities.forEach(function (entity) {
+		//根据Entity是否主从，获取相应的template
+		var tmplObjAbsFilt = TemplateHelper.getTemplatesByEntity(tmplObjAbs, entity);
+		
+		//套用模板（重新构造Entity），生成文件到对应路径
+		for(var i in tmplObjAbsFilt){
+			var tmplContent = fs.readFileSync('./tmpl/' + i + '.tmpl', { encoding: 'utf8' });
+			var extensionName = tmplObjAbsFilt[i].fileName.slice(tmplObjAbsFilt[i].fileName.lastIndexOf('.'))
+			var codeContent = TemplateHelper.applyTemplate(tmplContent, entity, extensionName,nameSpace);
+			
+		}
+		// subTmplList.forEach(function (tmpl) {
+		// 	TemplateHelper.applyTemplate(tmpl, entity)
+		// 		.then(function(fileContent, path) {
+		// 			fs.writeFile(path, fileContent, function (err) {
+		// 				// 处理可能的写入失败
+		// 				// 结束
+		// 			});
+		// 		});
+		// });
+	});
+
+
 	initTmpl();
 	for (var item in tmpl) {
 		if (tmpl.hasOwnProperty(item)) {
@@ -170,7 +197,6 @@ function walkEnd(event, selected) {
 	}
 }
 
-
 function getTables() {
 	console.log("get table");
 	return new Promise(function (resolve) {
@@ -198,12 +224,6 @@ function logError(err) {
 	console.error(err.stack);
 }
 
-function parseDotNetType(sqlType) {
-	return sqlTypeDict[sqlType] || 'string';
-}
-function parseJavaType(sqlType) {
-	return sqlTypeDict_java[sqlType] || 'String';
-}
 
 function getPrimaryKeys(tables) {
 	// return new Promise(function (resolve) {

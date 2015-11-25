@@ -46,5 +46,25 @@
   "viewIndex": {
     "fileName": "<%= entityName %>.index.jsp",
     "pathName": "./**/WEB-INF/views"
+  },
+    "controllerHeaderDetail": {
+    "fileName": "<%= entityName %>Controller.java",
+    "pathName": "./**/controller"
+  },
+    "viewAddHeaderDetail": {
+    "fileName": "<%= entityName %>.add.jsp",
+    "pathName": "./**/WEB-INF/views"
+  },
+  "viewDetailHeaderDetail": {
+    "fileName": "<%= entityName %>.detail.jsp",
+    "pathName": "./**/WEB-INF/views"
+  },
+  "viewEditHeaderDetail": {
+    "fileName": "<%= entityName %>.edit.jsp",
+    "pathName": "./**/WEB-INF/views"
+  },
+  "viewIndexHeaderDetail": {
+    "fileName": "<%= entityName %>.index.jsp",
+    "pathName": "./**/WEB-INF/views"
   }
 }

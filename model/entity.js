@@ -9,7 +9,22 @@ var Entity = (function () {
             }
         });
     }
+    Entity.prototype.getJSONObject = function () {
+        return {
+            name: this.name,
+            primaryKey: this.primaryKey,
+            properties: this.properties,
+            references: this.references.map(function (ref) {
+                return {
+                    propertyName: ref.propertyName,
+                    refPropertyName: ref.refPropertyName,
+                    refEntityName: ref.refEntity.name
+                };
+            })
+        };
+    };
     return Entity;
 })();
+Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = Entity;
 //# sourceMappingURL=entity.js.map

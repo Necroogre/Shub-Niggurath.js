@@ -19,7 +19,7 @@ var DataSourceHelper = (function () {
         }
         if (!d.projectPath) {
             //console.log('[DEBUG] #DataSourceHelper.getDataSource(), not found [key]: ', projectPath);
-            d = this.dataSourceFactory(projectPath, {});
+            d = this.dataSourceFactory(projectPath, this.dataSources[0]);
         }
         //console.log('[DEBUG] #DataSourceHelper.getDataSource() result', projectPath, d);
         return d;
