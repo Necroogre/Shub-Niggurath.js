@@ -43,7 +43,7 @@ describe('DataSourceHelper', function () {
                 database: 'ehsure.adrp-clean'
             });
             ds.getEntities().then(function (entities) {
-                console.log('[DEBUG] #configHelperTest.getEntities(), ds return: ', entities.length);
+                //console.log('[DEBUG] #configHelperTest.getEntities(), ds return: ', entities.length);
                 var headerEntity = _.find(entities, function (e) {
                     return e.name === 'Header';
                 });

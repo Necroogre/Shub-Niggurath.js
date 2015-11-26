@@ -28,12 +28,10 @@ var DataSourceHelper = (function () {
         var existed = _.find(this.dataSources, function (x) { return x.projectPath === config.projectPath; });
         if (existed) {
             existed = config.getConfigObj();
-            this.dataSources = _.reject(this.dataSources, function (x) { return x.projectPath === config.projectPath; })
-            this.dataSources.push(config.getConfigObj());
         }
         else {
             this.dataSources.push(config.getConfigObj());
-        }      
+        }
         //console.log('[DEBUG] #DataSourceHelper.setDataSource():', config, this.cfgFilePath);
         fs.writeFileSync(this.cfgFilePath, JSON.stringify(this.dataSources), { encoding: 'utf8' });
     };

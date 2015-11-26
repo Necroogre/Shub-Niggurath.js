@@ -96,7 +96,7 @@ export default class SqlServerDataSource implements IDataSource {
 				//console.log('[DEBUG] #sqlServerDataSource.getEntities(), this.sqlCfg: ', this.sqlCfg);
 				var req = new mssql.Request();
 				req.query(this.queryTableColumnsStr).then((recordSet) => {
-					console.log('[DEBUG] #sqlServerDataSource.getEntities(), query result: ', recordSet.length);
+					//console.log('[DEBUG] #sqlServerDataSource.getEntities(), query result: ', recordSet.length);
 					var properties: Property[] = recordSet.map(this.ParseRecordToProperty);
 					var propGroup = _.groupBy(properties, (prop) => {
 						return prop.entityName;
