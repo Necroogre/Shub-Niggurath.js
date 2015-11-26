@@ -1,3 +1,7 @@
+/* global it */
+/* global describe */
+
+
 var mkdirp = require('mkdirp');
 var assert = require('assert');
 var TemplateHelper = require('../templateHelper');
@@ -64,6 +68,24 @@ describe('TemplateHelper', function () {
       assert.equal(res.length, 1);
       assert.equal(res[0].name, "ConfigHeader");
 
+    });
+  });
+
+  describe('#applyTemplate()', function () {
+    it('should return templated string', function () {
+      var entity = {
+        name: "TestEntity",
+        properties: [
+          { name: "Id", description: "this is id", dataType: "varchar", precision: 0, length: 0, scale: 0, nullable: true },
+          { name: "Name", description: "this is name", dataType: "varchar", precision: 0, length: 0, scale: 0, nullable: true }
+        ]
+      };
+      var extensionName = "java";
+      var nameSpace = "com.ehsure.test";
+      var tmplContent = "Hello, <%= entityName %>, your nameSpace is '<%= nameSpace %>' and you have <%= columns.length %> columns.";
+      
+      var templatedString = TemplateHelper.applyTemplate(tmplContent, entity, extensionName, nameSpace);
+      assert.equal(templatedString, `Hello, ${entity.name}, your nameSpace is '${nameSpace}' and you have ${entity.properties.length} columns.`);
     });
   });
 

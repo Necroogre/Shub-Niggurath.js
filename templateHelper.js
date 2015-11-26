@@ -5,8 +5,10 @@ var sqlTypeDict = require('./cfg/sqlTypeDict.json');
 
 
 var TemplateHelper = (function () {
+
     function TemplateHelper() {
     }
+    
     //匹配所有模板绝对路径
     TemplateHelper.prototype.setAbsolutePath = function (tmplObj, rootPath) {
         for (var item in tmplObj) {
@@ -23,6 +25,7 @@ var TemplateHelper = (function () {
         }
         return tmplObj;
     };
+    
     //根据Entity是否主从，获取相应的template
     TemplateHelper.prototype.getTemplatesByEntity = function (tmplObj, entity) {
         var clone = _.clone(tmplObj);
@@ -42,6 +45,7 @@ var TemplateHelper = (function () {
         }
         return clone;
     };
+    
     //根据用户的选择过滤Entity[]
     TemplateHelper.prototype.getEntitiesByNameList = function (entities, nameList) {
         var list = nameList.map(function (x) { return x.entityName });
@@ -54,43 +58,41 @@ var TemplateHelper = (function () {
         }
         return result;
     };
+    
     //套用模板（重新构造Entity）
-    TemplateHelper.prototype.applyTemplate = function (content, entity, extensionName, nameSpace) {
-        var obj = {};
-        obj.entityName = entity.name;
-        obj.nameSpace = nameSpace
-        obj.columns = [];
-        for (var i = 0; i < entity.properties.length; i++) {
-            if (entity.properties[i] == null) {
-                continue;
-            }
-            var column = {};
-            column.desc = entity.properties[i].description;
-            column.javaType = sqlTypeDict.java[entity.properties[i].dataType];
-            column.name = entity.properties[i].name;
-            column.precision = entity.properties[i].precision;
-            column.length = entity.properties[i].length;
-            column.scale = entity.properties[i].scale;
-            column.nullable = entity.properties[i].nullable;
-            
-            
-            obj.columns.push(column);
-        }
+    TemplateHelper.prototype.applyTemplate = function (tmplContent, entity, extensionName, nameSpace) {
+        var obj = this.wrapEntity(entity);
+        obj.nameSpace = nameSpace;
 
         var codeContent = '';
         if (extensionName === 'jsp') {
-            codeContent = _.template(content,{ interpolate: /<\$=([\s\S]+?)\$>/g, evaluate: /<\$([\s\S]+?)\$>/g })(obj);
+            codeContent = _.template(tmplContent, { interpolate: /<\$=([\s\S]+?)\$>/g, evaluate: /<\$([\s\S]+?)\$>/g })(obj);
         } else {
-            codeContent = _.template(content)(obj);
+            codeContent = _.template(tmplContent)(obj);
         }
         return codeContent;
-    }
+    };
+
+    TemplateHelper.prototype.wrapEntity = function (entity) {
+        var obj = {};
+        obj.entityName = entity.name;
+        obj.columns = entity.properties.map(function (prop) {
+            return {
+                desc: prop.description,
+                javaType: sqlTypeDict.java[prop.dataType],
+                name: prop.name,
+                precision: prop.precision,
+                length: prop.length,
+                scale: prop.scale,
+                nullable: prop.nullable
+            };
+        });
+        return obj;
+    };
 
 
-    var h = new TemplateHelper();
-    //console.log('on create,', h.setAbsolutePath);
-    return h;
-    // return TemplateHelper;
+    var exportObj = new TemplateHelper();
+    return exportObj;
 })();
 
 module.exports = TemplateHelper;
