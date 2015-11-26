@@ -11,23 +11,26 @@ var TemplateHelper = (function () {
     
     //匹配所有模板绝对路径
     TemplateHelper.prototype.setAbsolutePath = function (tmplObj, rootPath) {
+        var cloned = {};
         for (var item in tmplObj) {
+            var clonedItem = _.clone(tmplObj[item]);
             var relativePath = tmplObj[item].pathName;
-            // console.log("relateivePath",relateivePath);
-            // console.log("rootPath",rootPath);
-            
+            console.log('[DEBUG] TemplateHelper.setAbsolutePath: relativePath: ', relativePath);
             var files = glob.sync(relativePath, { cwd: rootPath });
             // console.log("files:", files);
             if (files.length === 0) {
-                return "Template:" + item + ",路径不存在";
+                throw new Error("Template:" + item + ", 路径不存在");
             }
-            tmplObj[item].pathName = path.resolve(path.join(rootPath, files[0]));
+            console.log('[DEBUG] TemplateHelper.setAbsolutePath: matchedPath: ', files[0]);
+            clonedItem.pathName = path.resolve(path.join(rootPath, files[0]));
+            cloned[item] = clonedItem;
         }
-        return tmplObj;
+        return cloned;
     };
     
     //根据Entity是否主从，获取相应的template
     TemplateHelper.prototype.getTemplatesByEntity = function (tmplObj, entity) {
+        //console.log('[DEBUG] TemplateHelper.getTemplatesByEntity()', tmplObj);
         var clone = _.clone(tmplObj);
         if (entity.references.length > 0) {
             delete clone.controller;
@@ -75,9 +78,10 @@ var TemplateHelper = (function () {
 
     TemplateHelper.prototype.wrapEntity = function (entity) {
         var obj = {};
+        var _this = this;
         obj.entityName = entity.name;
         obj.columns = entity.properties.map(function (prop) {
-            return {
+            var wrapped = {
                 desc: prop.description,
                 javaType: sqlTypeDict.java[prop.dataType],
                 name: prop.name,
@@ -87,6 +91,16 @@ var TemplateHelper = (function () {
                 nullable: prop.nullable
             };
         });
+        if (obj.references.length) {
+            obj.references = entity.references.map(function (refObj) {
+                return {
+                    refEntity: _this.wrapEntity(refObj.refEntity),
+                    propertyName: refObj.propertyName,
+                    refPropertyName: refObj.refPropertyName
+                }
+            });
+        }
+
         return obj;
     };
 

@@ -38,12 +38,12 @@ var SqlServerDataSource = (function () {
         prop.dataType = record['ColDataType'];
         prop.description = record['ColDescription'];
         prop.entityName = record['TableName'];
-        prop.length = record['ColMaxLength'] || 0;
+        prop.length = record['ColMaxLength'];
         prop.nullable = (record['ColIsNullable'] !== 0);
-        prop.precision = record['ColPrecision'] || 0;
+        prop.precision = record['ColPrecision'];
         prop.refEntityName = record['RefTableName'];
         prop.refPropertyName = record['RefColumnName'];
-        prop.scale = record['ColScale'] || 0;
+        prop.scale = record['ColScale'];
         prop.isPrimaryKey = (record['isPK'] !== 0);
         return prop;
     };

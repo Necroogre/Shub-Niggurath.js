@@ -23,10 +23,6 @@
     "fileName": "<%= name %>AppService.java",
     "pathName": "./**/appservice"
   },
-  "controller": {
-    "fileName": "<%= name %>Controller.java",
-    "pathName": "./**/controller"
-  },
   "api": {
     "fileName": "<%= name %>Api.java",
     "pathName": "./**/api"
@@ -47,11 +43,7 @@
     "fileName": "<%= name %>/index.jsp",
     "pathName": "./**/WEB-INF/views/ebt"
   },
-    "controllerHeaderDetail": {
-    "fileName": "<%= name %>Controller.java",
-    "pathName": "./**/controller"
-  },
-    "viewAddHeaderDetail": {
+  "viewAddHeaderDetail": {
     "fileName": "<%= name %>/add.jsp",
     "pathName": "./**/WEB-INF/views/ebt"
   },
