@@ -49,7 +49,6 @@ app.on('ready', function () {
 		argv.path = argv.path ? path.resolve(argv.path) : "";
 		cfgHelper = new configHelper.DataSourceHelper('./cfg/config.json');
 		var cfgObj = cfgHelper.getDataSource(argv.path).getConfigObj();
-		console.log(cfgObj);
 		webContents.send('paras', cfgObj);
 	});
 	// Emitted when the window is closed.
@@ -125,9 +124,9 @@ ipc.on('getEntities', function (event, arg) {
 
 ipc.on('selectedList', function (event, entityNameList, genPath, nameSpace) {
 	count = Object.keys(tmpl).length;
-	console.log("path", genPath);
-	console.log("entityNameList", entityNameList);
-	console.log("entitiesGlobal.length", entitiesGlobal.length);
+	// console.log("path", genPath);
+	// console.log("entityNameList", entityNameList);
+	// console.log("entitiesGlobal.length", entitiesGlobal.length);
 	
 	//获取用户选择的Entity[]
 	var entities = TemplateHelper.getEntitiesByNameList(entitiesGlobal, entityNameList);
@@ -136,48 +135,78 @@ ipc.on('selectedList', function (event, entityNameList, genPath, nameSpace) {
 	// var tmplList = tmpl
 	//匹配所有模板路径
 	var tmplObjAbs = TemplateHelper.setAbsolutePath(tmpl, genPath);
-    console.log("tmplObjAbs", tmplObjAbs);
-	console.log("entities", entities);
-	entities.forEach(function (entity) {
-		console.log("foreach");
+	// entities.forEach(function (entity) {
+	// 	//根据Entity是否主从，获取相应的template
+	// 	var tmplObjAbsFilt = TemplateHelper.getTemplatesByEntity(tmplObjAbs, entity);
+	// 	//套用模板（重新构造Entity），生成文件到对应路径
+	// 	for (var i in tmplObjAbsFilt) {
+	// 		var tmplContent = fs.readFileSync('./tmpl/' + i + '.tmpl', { encoding: 'utf8' });
+	// 		var extensionName = tmplObjAbsFilt[i].fileName.slice(tmplObjAbsFilt[i].fileName.lastIndexOf('.') + 1);
+	// 		var codeContent = TemplateHelper.applyTemplate(tmplContent, entity, extensionName, nameSpace);
+	// 		var fullPath = path.join(tmplObjAbsFilt[i].pathName, _.template(tmplObjAbsFilt[i].fileName)(entity));
+
+	// 		if (!fs.existsSync(path.dirname(fullPath))) {
+	// 			mkdirp.sync(path.dirname(fullPath));
+	// 		}
+	// 		fs.writeFile(fullPath, codeContent, function (err) {
+	// 			if (err) {
+	// 				console.log('ipc.on("selectedList").fs.writeFile Error', err, 'fileName: ' + tmplObjAbsFilt[i].pathName);
+	// 			}
+	// 		});
+
+	// 	}
+	// });
+	writeAll(entities, tmplObjAbs, nameSpace).then(function (entities) {
+		console.log('OK ');
+		event.sender.send('selectedList-reply', JSON.stringify(entities));
+	}, function (err) {
+		console.log(err);
+		event.sender.send('selectedList-reply', err.stack);
+	});
+
+});
+function writeAll(entities, tmplObjAbs, nameSpace) {
+	return Promise.all(
+		entities.map(function (entity) {
+			return writeOne(entity, tmplObjAbs, nameSpace);
+		})
+		);
+}
+function writeOne(entity, tmplObjAbs, nameSpace) {
+	return new Promise(function (resolve, reject) {
+	
 		//根据Entity是否主从，获取相应的template
-		var tmplObjAbsFilt = TemplateHelper.getTemplatesByEntity(tmplObjAbs, entity);
-		console.log("tmplObjAbsFilt", tmplObjAbsFilt);
+		var tmplObjAbsFilt = TemplateHelper.getTemplatesByEntity(tmplObjAbs, entity);	
 		//套用模板（重新构造Entity），生成文件到对应路径
 		for (var i in tmplObjAbsFilt) {
 			var tmplContent = fs.readFileSync('./tmpl/' + i + '.tmpl', { encoding: 'utf8' });
-			var extensionName = tmplObjAbsFilt[i].fileName.slice(tmplObjAbsFilt[i].fileName.lastIndexOf('.'))
+			var extensionName = tmplObjAbsFilt[i].fileName.slice(tmplObjAbsFilt[i].fileName.lastIndexOf('.') + 1);
 			var codeContent = TemplateHelper.applyTemplate(tmplContent, entity, extensionName, nameSpace);
-			var fileName = path.join(tmplObjAbsFilt[i].pathName, _.template(tmplObjAbsFilt[i].fileName)(entity));
+			var fullPath = path.join(tmplObjAbsFilt[i].pathName, _.template(tmplObjAbsFilt[i].fileName)(entity));
 
-			fs.writeFile(fileName, codeContent, function (err) {
-				if (err) {
-					console.log('ipc.on("selectedList").fs.writeFile Error', err, 'fileName: ' + tmplObjAbsFilt[i].pathName);
-				}
-			});
+			if (!fs.existsSync(path.dirname(fullPath))) {
+				mkdirp.sync(path.dirname(fullPath));
+			}
+			if (fs.existsSync(fullPath)) {
+				entity.GenErrorInfo = 'file existed: ' + fullPath;
+				console.log('#writeFile().file existed', fullPath, entity.name);
+				resolve(entity);
+			} else {
+				fs.writeFile(fullPath, codeContent, function (err) {
+					if (err) {
+						console.log('ipc.on("selectedList").fs.writeFile Error', err, 'fileName: ' + tmplObjAbsFilt[i].pathName);
+						reject(err);
+					} else {
+						resolve(entity);
+					}
+				});
+			}
+
+
 		}
-		// subTmplList.forEach(function (tmpl) {
-		// 	TemplateHelper.applyTemplate(tmpl, entity)
-		// 		.then(function(fileContent, path) {
-		// 			fs.writeFile(path, fileContent, function (err) {
-		// 				// 处理可能的写入失败
-		// 				// 结束
-		// 			});
-		// 		});
-		// });
+
 	});
-
-
-	// initTmpl();
-	// for (var item in tmpl) {
-	// 	if (tmpl.hasOwnProperty(item)) {
-	// 		var pathName = tmpl[item].pathName;
-	// 		console.log("pathName", pathName);
-	// 		//match
-	// 		match(genPath, pathName, item, event, selected);
-	// 	}
-	// }
-});
+}
 
 function match(genPath, pathName, item, event, selected) {
 	glob(pathName, { cwd: genPath }, function (er, files) {

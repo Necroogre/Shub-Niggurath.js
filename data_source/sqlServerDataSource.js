@@ -17,6 +17,7 @@ var SqlServerDataSource = (function () {
         this.database = this.sqlCfg.database = cfgObj.database;
         this.user = this.sqlCfg.user = cfgObj.user;
         this.password = this.sqlCfg.password = cfgObj.password;
+        this.nameSpace = this.sqlCfg.nameSpace = cfgObj.nameSpace;        
         
     }
     /**
@@ -29,7 +30,8 @@ var SqlServerDataSource = (function () {
             server: this.server,
             database: this.database,
             user: this.user,
-            password: this.password
+            password: this.password,
+            nameSpace:this.nameSpace
         };
     };
     SqlServerDataSource.prototype.ParseRecordToProperty = function (record) {

@@ -6,8 +6,9 @@ import <%=nameSpace%>.entity.<%=entityName%>;
 import org.springframework.data.domain.Page;
 
 /**
- * Created by CodeGenjs on <%=new Date()%>.
+ * Spawn by Shub-Niggurath.js on <% print(new Date().toLocaleDateString()) %>
  */
+<% lowerCaseEntityName = entityName[0].toLowerCase() + entityName.slice(1) %>
 public interface <%=entityName%>Repository extends BaseCrudRepository<<%=entityName%>>{
 
     <%=entityName%>  getByCode(String Code);

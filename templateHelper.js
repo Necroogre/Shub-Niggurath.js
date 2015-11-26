@@ -9,9 +9,7 @@ var TemplateHelper = (function () {
     }
     //匹配所有模板绝对路径
     TemplateHelper.prototype.setAbsolutePath = function (tmplObj, rootPath) {
-        console.log(tmplObj, rootPath);
         for (var item in tmplObj) {
-            console.log('setAbsPath:', item, tmplObj);
             var relativePath = tmplObj[item].pathName;
             // console.log("relateivePath",relateivePath);
             // console.log("rootPath",rootPath);
@@ -81,7 +79,7 @@ var TemplateHelper = (function () {
 
         var codeContent = '';
         if (extensionName === 'jsp') {
-            codeContent = _.template(content)(obj, { interpolate: /<\$=([\s\S]+?)\$>/g, evaluate: /<\$([\s\S]+?)\$>/g });
+            codeContent = _.template(content,{ interpolate: /<\$=([\s\S]+?)\$>/g, evaluate: /<\$([\s\S]+?)\$>/g })(obj);
         } else {
             codeContent = _.template(content)(obj);
         }

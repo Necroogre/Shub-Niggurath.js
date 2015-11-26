@@ -7,7 +7,7 @@
 </head>
 <body id="main_layout"  >
 <div class="winContainer">
-  <form id="formMain" action=<$print('"${pageContext.request.contextPath}/api/'+_.last(nameSpace.split('.')).toLowerCase()+'/'+ allLowerCaseEntityName +'/add"')$> method="post" >
+  <form id="formMain" action=<$print('"${pageContext.request.contextPath}/api/'+_.last(nameSpace.split('.')).toLowerCase()+'/'+ entityName.toLowerCase() +'/add"')$> method="post" >
     <div class="btnBar">
       <a id="btnSave" href="javascript:void(0)" class="easyui-linkbutton" plain="true" iconcls="icon-save" >保存</a>
     </div>

@@ -1,10 +1,70 @@
 {
-    "entity": {
+  "entity": {
     "fileName": "<%= name %>.java",
     "pathName": "./**/entity"
+  },
+  "dto": {
+    "fileName": "<%= name %>DTO.java",
+    "pathName": "./**/dto"
+  },
+  "repo": {
+    "fileName": "<%= name %>RepositoryImpl.java",
+    "pathName": "./**/repository/impl"
+  },
+  "repoInterface": {
+    "fileName": "<%= name %>Repository.java",
+    "pathName": "./**/repository"
+  },
+  "appSvc": {
+    "fileName": "<%= name %>AppServiceImpl.java",
+    "pathName": "./**/appservice/impl"
+  },
+  "appSvcInterface": {
+    "fileName": "<%= name %>AppService.java",
+    "pathName": "./**/appservice"
+  },
+  "controller": {
+    "fileName": "<%= name %>Controller.java",
+    "pathName": "./**/controller"
   },
   "api": {
     "fileName": "<%= name %>Api.java",
     "pathName": "./**/api"
+  },
+  "viewAdd": {
+    "fileName": "<%= name %>/add.jsp",
+    "pathName": "./**/WEB-INF/views/ebt"
+  },
+  "viewDetail": {
+    "fileName": "<%= name %>/detail.jsp",
+    "pathName": "./**/WEB-INF/views/ebt"
+  },
+  "viewEdit": {
+    "fileName": "<%= name %>/edit.jsp",
+    "pathName": "./**/WEB-INF/views/ebt"
+  },
+  "viewIndex": {
+    "fileName": "<%= name %>/index.jsp",
+    "pathName": "./**/WEB-INF/views/ebt"
+  },
+    "controllerHeaderDetail": {
+    "fileName": "<%= name %>Controller.java",
+    "pathName": "./**/controller"
+  },
+    "viewAddHeaderDetail": {
+    "fileName": "<%= name %>/add.jsp",
+    "pathName": "./**/WEB-INF/views/ebt"
+  },
+  "viewDetailHeaderDetail": {
+    "fileName": "<%= name %>/detail.jsp",
+    "pathName": "./**/WEB-INF/views/ebt"
+  },
+  "viewEditHeaderDetail": {
+    "fileName": "<%= name %>/edit.jsp",
+    "pathName": "./**/WEB-INF/views/ebt"
+  },
+  "viewIndexHeaderDetail": {
+    "fileName": "<%= name %>/index.jsp",
+    "pathName": "./**/WEB-INF/views/ebt"
   }
 }

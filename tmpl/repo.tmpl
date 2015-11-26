@@ -19,8 +19,9 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * Created by CodeGenjs on <%=new Date()%>.
+ * Spawn by Shub-Niggurath.js on <% print(new Date().toLocaleDateString()) %>
  */
+<% lowerCaseEntityName = entityName[0].toLowerCase() + entityName.slice(1) %>
 @Repository
 public class <%=entityName%>RepositoryImpl extends BaseEbdRepository<<%=entityName%>> implements <%=entityName%>Repository{
 

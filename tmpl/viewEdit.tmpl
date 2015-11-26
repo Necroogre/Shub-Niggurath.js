@@ -5,6 +5,8 @@
   <title></title>
   <tag:header />
 </head>
+<$ allLowerCaseEntityName=entityName.toLowerCase();$>
+<$ columns.forEach(function (prop) { prop.lowerCaseName=prop.name[0].toLowerCase()+prop.name.slice(1)}) $>
 <body id="main_layout"  >
 <div class="winContainer">
   <form id="formMain" action=<$print('"${pageContext.request.contextPath}/api/'+_.last(nameSpace.split('.')).toLowerCase()+'/'+ allLowerCaseEntityName +'/edit"')$> method="post" >

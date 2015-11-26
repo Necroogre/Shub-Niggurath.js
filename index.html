@@ -177,9 +177,9 @@
 </html>
 <script type="text/template" id="li-template">
     <% var fk=""; var info="";if(hasFK){fk="FK"; info=fkInfo;} %>
-    <a id="<%=entityName%>" href="#" onclick="select(this)" class="list-group-item">
-        <%=entityName%>         <span style="float:right" data-toggle="tooltip" data-placement="right" title="<%=info%>"><%=fk%></span>
-    </a>
+        <a id="<%=entityName%>" href="#" onclick="select(this)" class="list-group-item">
+            <%=entityName%> <span style="float:right" data-toggle="tooltip" data-placement="right" title="<%=info%>"><%=fk%></span>
+        </a>
 </script>
 <script type="text/template" id="log-li-template">
     <a id="<%=entityName%>" href="#" class="list-group-item">
@@ -210,7 +210,7 @@
         $('#database').val(arg.database);
         $('#username').val(arg.user);
         $('#password').val(arg.password);
-        $('#namespace').val(arg.namespaceStr);
+        $('#namespace').val(arg.nameSpace);
         $('#path').val(arg.projectPath);            
         
         sqlConfig();
@@ -223,7 +223,7 @@
         var database= $('#database').val();
         var user= $('#username').val();
         var password= $('#password').val();
-        var namespaceStr= $('#namespace').val();
+        var nameSpace= $('#namespace').val();
         
         var path=$('#path').val();
         var obj={};
@@ -232,7 +232,7 @@
             database:database,
             user:user,
             password:password,
-            namespaceStr:namespaceStr
+            nameSpace:nameSpace
         };
         console.log(obj);
         ipc.send('getEntities', obj);
@@ -283,7 +283,7 @@
         if(selectedList.length==0){
             $('#warning').show('slow');
         }else{
-            $('#ok-btn').button('loading');
+            // $('#ok-btn').button('loading');
             var path=$('#path').val();
             var nameSpace=$('#namespace').val();
             ipc.send('selectedList', selectedList,path,nameSpace);
@@ -296,17 +296,21 @@
         var template=_.template($("#log-li-template").html());
         var logList=[];
         for(var i=0 ;i < arg.length;i++){
-            for(var j=0;j< arg[i].length;j++){
-                if(arg[i][j]!=null&&arg[i][j].GenErrorInfo!=undefined){
-                    console.log(arg[i][j]);
-                   logList.push(arg[i][j]);                    
-                }
+            // for(var j=0;j< arg[i].length;j++){
+            //     if(arg[i][j]!=null&&arg[i][j].GenErrorInfo!=undefined){
+            //         console.log(arg[i][j]);
+            //        logList.push(arg[i][j]);                    
+            //     }
+            // }
+            if(arg[i]!=null&&arg[i].GenErrorInfo!=undefined){
+                arg[i].entityName=arg[i].name;
+                logList.push(arg[i]);
             }
         }
         if(logList.length==0){
             $('#success').show('slow');
         }else{
-                   for(var i=0;i<logList.length;i++){
+            for(var i=0;i<logList.length;i++){
             $('#log').append(template(logList[i]));
            } 
         }

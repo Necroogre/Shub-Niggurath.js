@@ -7,7 +7,7 @@ import java.util.Date;
 /**
  * Spawn by Shub-Niggurath.js on <% print(new Date().toLocaleDateString()) %>
  */
-<% columns.forEach(function (prop) { prop.lowerCaseName=name[0].toLowerCase()+name.slice(1)}) %>
+<% columns.forEach(function (prop) { prop.lowerCaseName=prop.name[0].toLowerCase()+prop.name.slice(1)}) %>
 public class <%= entityName %>DTO {
     <% columns.forEach(function (prop) {%>
         private <%= prop.javaType %> <%= prop.lowerCaseName %>;
