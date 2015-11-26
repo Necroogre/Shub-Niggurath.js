@@ -70,7 +70,7 @@ var _ = require('underscore');
 var tmpl = require('./cfg/templates.json');
 var sqlTypeDict = require('./cfg/sqlTypeDict.json');
 var SqlServerDataSource = require('./data_source/sqlServerDataSource').default;
-// var TemplateHelper = require('../templateHelper');
+var TemplateHelper = require('./templateHelper');
 
 
 var genPath = "";
@@ -100,7 +100,7 @@ function initTmpl() {
 
 var count = -1;
 var conn = {};
-var entitiesGlobal=[];
+var entitiesGlobal = [];
 
 ipc.on('devTool', function (event, arg) {
 	mainWindow.webContents.openDevTools();
@@ -115,8 +115,7 @@ ipc.on('getEntities', function (event, arg) {
 	cfgHelper.setDataSource(ds);
 
 	ds.getEntities().then(function (entities) {
-		entitiesGlobal=entities;
-		console.log("entitiesGlobal:",entities[0].properties);
+		entitiesGlobal = entities;
 		event.sender.send('getEntities-reply', entities.map(function (entity) {
 			return entity.getJSONObject();
 		}));
@@ -127,24 +126,35 @@ ipc.on('getEntities', function (event, arg) {
 ipc.on('selectedList', function (event, entityNameList, genPath, nameSpace) {
 	count = Object.keys(tmpl).length;
 	console.log("path", genPath);
+	console.log("entityNameList", entityNameList);
+	console.log("entitiesGlobal.length", entitiesGlobal.length);
+	
 	//获取用户选择的Entity[]
-	var entities = TemplateHelper.getEntitiesByNameList(entitiesGlobal,entityNameList);
+	var entities = TemplateHelper.getEntitiesByNameList(entitiesGlobal, entityNameList);
 
 	// //获取所有模板
 	// var tmplList = tmpl
 	//匹配所有模板路径
-	var tmplObjAbs = TemplateHelper.setAbsolutePath(tmpl);
-
+	var tmplObjAbs = TemplateHelper.setAbsolutePath(tmpl, genPath);
+    console.log("tmplObjAbs", tmplObjAbs);
+	console.log("entities", entities);
 	entities.forEach(function (entity) {
+		console.log("foreach");
 		//根据Entity是否主从，获取相应的template
 		var tmplObjAbsFilt = TemplateHelper.getTemplatesByEntity(tmplObjAbs, entity);
-		
+		console.log("tmplObjAbsFilt", tmplObjAbsFilt);
 		//套用模板（重新构造Entity），生成文件到对应路径
-		for(var i in tmplObjAbsFilt){
+		for (var i in tmplObjAbsFilt) {
 			var tmplContent = fs.readFileSync('./tmpl/' + i + '.tmpl', { encoding: 'utf8' });
 			var extensionName = tmplObjAbsFilt[i].fileName.slice(tmplObjAbsFilt[i].fileName.lastIndexOf('.'))
-			var codeContent = TemplateHelper.applyTemplate(tmplContent, entity, extensionName,nameSpace);
-			
+			var codeContent = TemplateHelper.applyTemplate(tmplContent, entity, extensionName, nameSpace);
+			var fileName = path.join(tmplObjAbsFilt[i].pathName, _.template(tmplObjAbsFilt[i].fileName)(entity));
+
+			fs.writeFile(fileName, codeContent, function (err) {
+				if (err) {
+					console.log('ipc.on("selectedList").fs.writeFile Error', err, 'fileName: ' + tmplObjAbsFilt[i].pathName);
+				}
+			});
 		}
 		// subTmplList.forEach(function (tmpl) {
 		// 	TemplateHelper.applyTemplate(tmpl, entity)
@@ -158,15 +168,15 @@ ipc.on('selectedList', function (event, entityNameList, genPath, nameSpace) {
 	});
 
 
-	initTmpl();
-	for (var item in tmpl) {
-		if (tmpl.hasOwnProperty(item)) {
-			var pathName = tmpl[item].pathName;
-			console.log("pathName", pathName);
-			//match
-			match(genPath, pathName, item, event, selected);
-		}
-	}
+	// initTmpl();
+	// for (var item in tmpl) {
+	// 	if (tmpl.hasOwnProperty(item)) {
+	// 		var pathName = tmpl[item].pathName;
+	// 		console.log("pathName", pathName);
+	// 		//match
+	// 		match(genPath, pathName, item, event, selected);
+	// 	}
+	// }
 });
 
 function match(genPath, pathName, item, event, selected) {

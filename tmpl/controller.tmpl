@@ -27,8 +27,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by CodeGenjs on <%=new Date()%>.
+ * Spawn by Shub-Niggurath.js on <% print(new Date().toLocaleDateString()) %>
  */
+<% lowerCaseEntityName = entityName[0].toLowerCase() + entityName.slice(1) %>
 @Controller
 @RequestMapping("/<% print(_.last(nameSpace.split('.')).toLowerCase())%>/<% print(lowerCaseEntityName.toLowerCase()) %>")
 public class <%=entityName%>Controller extends BaseController {

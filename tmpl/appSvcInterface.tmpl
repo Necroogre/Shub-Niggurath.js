@@ -6,8 +6,9 @@ import com.ehsure.eaf.core.dto.PageResult;
 import <%=nameSpace%>.dto.<%=entityName%>DTO;
 
 /**
- * Created by CodeGenjs on <%=new Date()%>.
+ * Spawn by Shub-Niggurath.js on <% print(new Date().toLocaleDateString()) %>
  */
+<% lowerCaseEntityName = entityName[0].toLowerCase() + entityName.slice(1) %>
 public interface <%=entityName%>AppService {
     /**
      * 获取<%=entityName%>

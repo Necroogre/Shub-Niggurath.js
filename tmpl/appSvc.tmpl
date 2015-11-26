@@ -17,13 +17,14 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Created by CodeGenjs on <%=new Date()%>.
+ * Spawn by Shub-Niggurath.js on <% print(new Date().toLocaleDateString()) %>
  */
+ <% lowerCaseEntityName = entityName[0].toLowerCase() + entityName.slice(1) %>
 @Service
 public class <%=entityName%>AppServiceImpl implements <%=entityName%>AppService{
     @Resource
     private <%=entityName%>Repository repo;
-<%=console.log("lowerCase:",lowerCaseEntityName) %>
+    
     /**
      * 获取<%=entityName%>
      * @param id

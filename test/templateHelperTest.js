@@ -10,19 +10,20 @@ describe('TemplateHelper', function () {
 
   describe('#setAbsolutePath()', function () {
     it('should return templateObj', function () {
-      mkdirp.sync('./jsTest/entity');
-      mkdirp.sync('./jsTest/dto');
-      mkdirp.sync('./jsTest/repository/impl');
-      mkdirp.sync('./jsTest/repository');
-      mkdirp.sync('./jsTest/appservice/impl');
-      mkdirp.sync('./jsTest/appservice');
-      mkdirp.sync('./jsTest/controller');
+      // mkdirp.sync('./jsTest/entity');
+      // mkdirp.sync('./jsTest/dto');
+      // mkdirp.sync('./jsTest/repository/impl');
+      // mkdirp.sync('./jsTest/repository');
+      // mkdirp.sync('./jsTest/appservice/impl');
+      // mkdirp.sync('./jsTest/appservice');
+      // mkdirp.sync('./jsTest/controller');
       mkdirp.sync('./jsTest/api');
-      mkdirp.sync('./jsTest/WEB-INF/views');
-      var entityAbsPath = path.resolve('./jsTest/entity');
+      // mkdirp.sync('./jsTest/WEB-INF/views');
+      var entityAbsPath = path.resolve('./jsTest/api');
       var res = TemplateHelper.setAbsolutePath(templateObj, "./jsTest");
       //console.log("the return templateObj", res);
-      assert.equal(res.entity.pathName, entityAbsPath);
+      console.log(res);
+      assert.equal(res["api"].pathName, entityAbsPath);
 
     });
   });
@@ -49,4 +50,26 @@ describe('TemplateHelper', function () {
     });
   });
 
+
+  describe('#getEntitiesByNameList()', function () {
+    it('should return templateObj', function () {
+      var entity = {};
+      entity.name = "ConfigHeader";
+      entity.references = [];
+
+      var fkEntity = {};
+      fkEntity.name = "Header";
+      fkEntity.references = [{ propertyName: "Id", refEntityName: "Detail", refPropertyName: "HeaderId" }];
+
+      var entities=[fkEntity,entity];
+      var nameList=[{entityName:"ConfigHeader",hasFK:false}];
+      var res = TemplateHelper.getEntitiesByNameList(entities, nameList);
+      
+      assert.equal(res.length, 1);
+      assert.equal(res[0].name, "ConfigHeader");
+     
+    });
+  });
+  
+  
 });

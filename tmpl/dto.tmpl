@@ -5,8 +5,9 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 /**
- * Created by CodeGenjs on <%=new Date()%>.
+ * Spawn by Shub-Niggurath.js on <% print(new Date().toLocaleDateString()) %>
  */
+<% columns.forEach(function (prop) { prop.lowerCaseName=name[0].toLowerCase()+name.slice(1)}) %>
 public class <%= entityName %>DTO {
     <% columns.forEach(function (prop) {%>
         private <%= prop.javaType %> <%= prop.lowerCaseName %>;

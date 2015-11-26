@@ -22,10 +22,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by Frieda on 2015/11/5.
+ * Spawn by Shub-Niggurath.js on <% print(new Date().toLocaleDateString()) %>
  */
+ <% lowerCaseEntityName = entityName[0].toLowerCase() + entityName.slice(1) %>
 @Controller
-@RequestMapping("/api/<% print(_.last(nameSpace.split('.')).toLowerCase())%>/<% print(lowerCaseEntityName.toLowerCase())%>")
+@RequestMapping("/api/<% print(_.last(nameSpace.split('.')).toLowerCase())%>/<%  print(lowerCaseEntityName.toLowerCase()) %>")
 public class <%=entityName%>Api {
 
     @Resource
