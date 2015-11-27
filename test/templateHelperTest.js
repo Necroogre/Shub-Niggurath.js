@@ -14,18 +14,27 @@ var _ = require('underscore');
 describe('TemplateHelper', function () {
 
   describe('#setAbsolutePath()', function () {
-    it('should return templateObj with absolute path', function () {
+    it('should return templateObj with absolute path', function (done) {
       var templateObj = {
         "api": {
           "fileName": "<%= name %>.java",
           "pathName": "./**/api"
+        },
+        "entity": {
+          "fileName": "<%= name %>.java",
+          "pathName": "./**/entity"
         }
       };
       mkdirp.sync('./jsTest/api');
-      var entityAbsPath = path.resolve('./jsTest/api');
-      var res = TemplateHelper.setAbsolutePath(templateObj, "./jsTest");
-      assert.equal(res["api"].pathName, entityAbsPath);
+      mkdirp.sync('./jsTest/entity');
 
+      var apiAbsPath = path.resolve('./jsTest/api');
+      var entityAbsPath = path.resolve('./jsTest/entity');
+      TemplateHelper.setAbsolutePath(templateObj, "./jsTest").then(function (res) {
+        assert.equal(res["api"].pathName, apiAbsPath);
+        assert.equal(res["entity"].pathName, entityAbsPath);
+        done();
+      });
     });
   });
 
@@ -84,7 +93,7 @@ describe('TemplateHelper', function () {
       var extensionName = "java";
       var nameSpace = "com.ehsure.test";
       var tmplContent = "Hello, <%= entityName %>, your nameSpace is '<%= nameSpace %>' and you have <%= columns.length %> columns.";
-      
+
       var templatedString = TemplateHelper.applyTemplate(tmplContent, entity, extensionName, nameSpace);
       assert.equal(templatedString, `Hello, ${entity.name}, your nameSpace is '${nameSpace}' and you have ${entity.properties.length} columns.`);
     });

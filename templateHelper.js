@@ -1,3 +1,4 @@
+/* global Promise */
 var glob = require("glob");
 var path = require('path');
 var _ = require('underscore');
@@ -11,23 +12,37 @@ var TemplateHelper = (function () {
     
     //匹配所有模板绝对路径
     TemplateHelper.prototype.setAbsolutePath = function (tmplObj, rootPath) {
-        var cloned = {};
-        for (var item in tmplObj) {
-            if (tmplObj.hasOwnProperty(item)) {
-                var clonedItem = _.clone(tmplObj[item]);
-                var relativePath = tmplObj[item].pathName;
-                // console.log('[DEBUG] TemplateHelper.setAbsolutePath: relativePath: ', relativePath);
-                var files = glob.sync(relativePath, { cwd: rootPath });
-                // console.log("files:", files);
-                if (files.length === 0) {
-                    throw new Error("Template:" + item + ", 路径不存在");
+        return new Promise(function (resolve, reject) {
+            var cloned = {};
+            var allGlobTask = [];
+            for (var item in tmplObj) {
+                if (tmplObj.hasOwnProperty(item)) {
+                    (function (key) {
+                        var clonedItem = _.clone(tmplObj[key]);
+                        var relativePath = tmplObj[key].pathName;
+                        var globTask = new Promise(function (fullfill, rej) {
+                            glob(relativePath, { cwd: rootPath }, function (err, files) {
+                                if (err) { rej(err); }
+                                if (files.length === 0) { rej(new Error("Template:" + key + ", 路径不存在")); }
+                                clonedItem.pathName = path.resolve(path.join(rootPath, files[0]));
+                                cloned[key] = clonedItem;
+                                //console.log('[DEBUG] TemplateHelper.setAbsolutePath().globTask, ', clonedItem);
+                                fullfill(clonedItem);
+                            });
+                        });
+                        allGlobTask.push(globTask);
+                    })(item);
                 }
-                // console.log('[DEBUG] TemplateHelper.setAbsolutePath: matchedPath: ', files[0]);
-                clonedItem.pathName = path.resolve(path.join(rootPath, files[0]));
-                cloned[item] = clonedItem;
             }
-        }
-        return cloned;
+            //console.log('[DEBUG] TemplateHelper.setAbsolutePath() allGlobTask, ', allGlobTask.length);
+            Promise.all(allGlobTask).then(function () {
+                //console.log('[DEBUG] TemplateHelper.setAbsolutePath(), ', cloned);
+                resolve(cloned);
+            }).catch(function (err) {
+                console.log('[ERROR] TemplateHelper.setAbsolutePath() Error: ', err);
+                reject(err);
+            });
+        });
     };
     
     //根据Entity是否主从，获取相应的template

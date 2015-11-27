@@ -103,16 +103,18 @@ ipc.on('selectedList', function (event, entityNameList, genPath, nameSpace) {
 	
 	var entities = TemplateHelper.getEntitiesByNameList(entitiesGlobal, entityNameList);
 
-	var tmplObjAbs = TemplateHelper.setAbsolutePath(tmpl, genPath);
-
-	writeAll(entities, tmplObjAbs, nameSpace).then(function (entities) {
-		console.log('OK ');
-		event.sender.send('selectedList-reply', JSON.stringify(entities));
-	}, function (err) {
+	TemplateHelper.setAbsolutePath(tmpl, genPath).then(function (tmplObjAbs) {
+		writeAll(entities, tmplObjAbs, nameSpace).then(function (entities) {
+			console.log('OK ');
+			event.sender.send('selectedList-reply', JSON.stringify(entities));
+		}, function (err) {
+			console.log(err);
+			event.sender.send('selectedList-reply', err.stack);
+		});
+	}).catch(function (err) {
 		console.log(err);
 		event.sender.send('selectedList-reply', err.stack);
 	});
-
 });
 
 function writeAll(entities, tmplObjAbs, nameSpace) {
@@ -124,7 +126,7 @@ function writeAll(entities, tmplObjAbs, nameSpace) {
 
 function writeOne(entity, tmplObjAbs, nameSpace) {
 	return new Promise(function (resolve, reject) {
-		var tmplObjAbsFilt = TemplateHelper.getTemplatesByEntity(tmplObjAbs, entity);	
+		var tmplObjAbsFilt = TemplateHelper.getTemplatesByEntity(tmplObjAbs, entity);
 		for (var i in tmplObjAbsFilt) {
 			if (!tmplObjAbsFilt.hasOwnProperty(i)) {
 				continue;
