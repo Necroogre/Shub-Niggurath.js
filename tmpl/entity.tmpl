@@ -21,6 +21,14 @@ public class <%= entityName %> extends BaseUuidAuditableEnity{
         @Column(nullable = <%=prop.nullable%><%=lengthTemp%><%=precisionTemp%><%=scaleTemp%>)
         private <%= prop.javaType %> <%= prop.lowerCaseName %>;
     <% }) %>
+    <% if(references.length){ 
+       for (var i=0;i<references.length ;i++ ) {
+           var refEntityName=references[0].refEntity.entityName;
+          print('@OneToMany(cascade = CascadeType.ALL,mappedBy = "'+entityName.toLowerCase()+'")');
+          print('private List<'+refEntityName+'> '+refEntityName.toLowerCase()+'List=new ArrayList<>();');         
+       }
+    } %>
+
     <% columns.forEach(function (prop) { %>
         /**
          * <%= prop.desc %>
@@ -32,4 +40,11 @@ public class <%= entityName %> extends BaseUuidAuditableEnity{
               this.<%= prop.lowerCaseName %> = <%= prop.lowerCaseName %>;
         }
     <% }) %>
+    <% if(references.length){ 
+       for (var i=0;i<references.length ;i++ ) {
+           var refEntityName=references[0].refEntity.entityName;
+          print('public List<'+refEntityName+'> get'+refEntityName+'List() { return '+refEntityName.toLowerCase()+'List; }');
+          print('public void set'+refEntityName+'List(List<'+refEntityName+'> '+refEntityName.toLowerCase()+'List) {this.'+refEntityName.toLowerCase()+'List = '+refEntityName.toLowerCase()+'List;}');         
+       }
+    } %>    
 }

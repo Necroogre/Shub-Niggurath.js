@@ -80,7 +80,7 @@
         //构造simpleGrid（子项）
         var itemTmpl = _.template($('#itemTemplate').html());//添加子数据的模板html
         var newItemDataTmpl = {};//添加子数据项时的模板数据，若不需要则设置为{}
-        var subItemPropertyName='foobarItemList';//主数据中的子项属性名称
+        var subItemPropertyName='<$print(refEntity.entityName.toLowerCase()+'List')$>';//主数据中的子项属性名称
         simpleSubItemGrid = new SimpleGrid('tbdItems', itemTmpl, subItemPropertyName, newItemDataTmpl);
         //构造pageform（主数据）
         var easyUIFormParams = {onLoadSuccess: onFormLoadSuccess};

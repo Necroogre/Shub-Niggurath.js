@@ -101,15 +101,10 @@ ipc.on('selectedList', function (event, entityNameList, genPath, nameSpace) {
 	// console.log("entityNameList", entityNameList);
 	// console.log("entitiesGlobal.length", entitiesGlobal.length);
 	
-	//获取用户选择的Entity[]
 	var entities = TemplateHelper.getEntitiesByNameList(entitiesGlobal, entityNameList);
 
-
-	//匹配所有模板路径
 	var tmplObjAbs = TemplateHelper.setAbsolutePath(tmpl, genPath);
-	
-	// 	//根据Entity是否主从，获取相应的template
-	// 	//套用模板（重新构造Entity），生成文件到对应路径
+
 	writeAll(entities, tmplObjAbs, nameSpace).then(function (entities) {
 		console.log('OK ');
 		event.sender.send('selectedList-reply', JSON.stringify(entities));
@@ -129,10 +124,7 @@ function writeAll(entities, tmplObjAbs, nameSpace) {
 
 function writeOne(entity, tmplObjAbs, nameSpace) {
 	return new Promise(function (resolve, reject) {
-	
-		//根据Entity是否主从，获取相应的template
 		var tmplObjAbsFilt = TemplateHelper.getTemplatesByEntity(tmplObjAbs, entity);	
-		//套用模板（重新构造Entity），生成文件到对应路径
 		for (var i in tmplObjAbsFilt) {
 			if (!tmplObjAbsFilt.hasOwnProperty(i)) {
 				continue;

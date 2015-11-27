@@ -112,9 +112,9 @@ var TemplateHelper = (function () {
         } else {
             obj.references = [];
         }
-        if (obj.entityName === 'Detail') {
-            console.log('detail columns:', obj, entity.properties);
-        }
+        // if (obj.entityName === 'Detail') {
+        //     console.log('detail columns:', obj, entity.properties);
+        // }
         return obj;
     };
 

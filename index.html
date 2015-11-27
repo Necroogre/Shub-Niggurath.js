@@ -283,7 +283,7 @@
         if(selectedList.length==0){
             $('#warning').show('slow');
         }else{
-            // $('#ok-btn').button('loading');
+            $('#ok-btn').button('loading');
             var path=$('#path').val();
             var nameSpace=$('#namespace').val();
             ipc.send('selectedList', selectedList,path,nameSpace);
