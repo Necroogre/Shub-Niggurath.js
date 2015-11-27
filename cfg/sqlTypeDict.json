@@ -6,7 +6,8 @@
 		"nvarchar": "string",
 		"bit": "bool",
 		"datetime2": "DateTime",
-		"decimal": "decimal"
+		"decimal": "decimal",
+		"numeric": "decimal"		
 	},
 	"java": {
 		"varchar": "String",
@@ -15,6 +16,7 @@
 		"datetime2": "Date",
 		"int": "int",
 		"decimal": "BigDecimal",
-		"bit": "boolean"
+		"bit": "boolean",
+		"numeric": "BigDecimal"
 	}
 }
