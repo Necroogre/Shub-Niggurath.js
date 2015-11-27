@@ -23,7 +23,7 @@
               if (!columns[index].nullable) { print('<span class="needStar">*</span>') }
               print('</th>');
               print('<td>');
-              print('<input id="' + columns[index].lowerCaseName +'" name="' + columns[index].lowerCaseName + '" type="text" data-qoperator="5" data-qtype="string" />');
+              print('<input id="' + columns[index].name.toLowerCase() +'" name="' + columns[index].name.toLowerCase() + '" type="text" data-qoperator="5" data-qtype="string" />');
               print('</td>');
             }
           } 
@@ -48,7 +48,7 @@
         <th field="ck" checkbox="true"></th>
             <$
               for(var i=0;i<columns.length;i++){
-                 print( '<th'+columns[i].name+'>'+columns[i].desc+'</th>' ); 
+                 print( '<th field="'+columns[i].name+'"">'+columns[i].desc+'</th>' ); 
               }
             $>
     </tr>
@@ -62,7 +62,7 @@
     var page = {};
     var dataGrid = {};
     $(function () {
-        page = new ehsure.jothuheim.SimplePage('${pageContext.request.contextPath}', '<$print(_.last(nameSpace.split('.')).toLowerCase())$>/<$print(entityName.toLowerCase())$>', '<$=entityName$>');
+        page = new ehsure.jothuheim.SimplePage('${pageContext.request.contextPath}', '${modulePath}', '<$=entityName$>');
         datagrid = new ehsure.jothuheim.DataGrid($('#dg'), $('#queryForm'), page.getApiUrl('list'));
         page.setDataGrid(datagrid);
         datagrid.reload();

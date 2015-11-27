@@ -174,37 +174,38 @@ function writeAll(entities, tmplObjAbs, nameSpace) {
 }
 function writeOne(entity, tmplObjAbs, nameSpace) {
 	return new Promise(function (resolve, reject) {
-	
-		//根据Entity是否主从，获取相应的template
-		var tmplObjAbsFilt = TemplateHelper.getTemplatesByEntity(tmplObjAbs, entity);	
-		//套用模板（重新构造Entity），生成文件到对应路径
-		for (var i in tmplObjAbsFilt) {
-			var tmplContent = fs.readFileSync('./tmpl/' + i + '.tmpl', { encoding: 'utf8' });
-			var extensionName = tmplObjAbsFilt[i].fileName.slice(tmplObjAbsFilt[i].fileName.lastIndexOf('.') + 1);
-			var codeContent = TemplateHelper.applyTemplate(tmplContent, entity, extensionName, nameSpace);
-			console.log('[DEBUG] after applyTemplate()');
-			var fullPath = path.join(tmplObjAbsFilt[i].pathName, _.template(tmplObjAbsFilt[i].fileName)(entity));
-			if (!fs.existsSync(path.dirname(fullPath))) {
-				mkdirp.sync(path.dirname(fullPath));
+		try {
+			//根据Entity是否主从，获取相应的template
+			var tmplObjAbsFilt = TemplateHelper.getTemplatesByEntity(tmplObjAbs, entity);	
+			//套用模板（重新构造Entity），生成文件到对应路径
+			for (var i in tmplObjAbsFilt) {
+				var tmplContent = fs.readFileSync('./tmpl/' + i + '.tmpl', { encoding: 'utf8' });
+				var extensionName = tmplObjAbsFilt[i].fileName.slice(tmplObjAbsFilt[i].fileName.lastIndexOf('.') + 1);
+				var codeContent = TemplateHelper.applyTemplate(tmplContent, entity, extensionName, nameSpace);
+				console.log('[DEBUG] after applyTemplate()');
+				var fullPath = path.join(tmplObjAbsFilt[i].pathName, _.template(tmplObjAbsFilt[i].fileName)(entity));
+				if (!fs.existsSync(path.dirname(fullPath))) {
+					mkdirp.sync(path.dirname(fullPath));
+				}
+				if (fs.existsSync(fullPath)) {
+					entity.GenErrorInfo = 'file existed: ' + fullPath;
+					console.log('#writeFile().file existed', fullPath, entity.name);
+					resolve(entity);
+				} else {
+					fs.writeFile(fullPath, codeContent, function (err) {
+						if (err) {
+							console.log('ipc.on("selectedList").fs.writeFile Error', err, 'fileName: ' + tmplObjAbsFilt[i].pathName);
+							reject(err);
+						} else {
+							resolve(entity);
+						}
+					});
+				}
 			}
-			if (fs.existsSync(fullPath)) {
-				entity.GenErrorInfo = 'file existed: ' + fullPath;
-				console.log('#writeFile().file existed', fullPath, entity.name);
-				resolve(entity);
-			} else {
-				fs.writeFile(fullPath, codeContent, function (err) {
-					if (err) {
-						console.log('ipc.on("selectedList").fs.writeFile Error', err, 'fileName: ' + tmplObjAbsFilt[i].pathName);
-						reject(err);
-					} else {
-						resolve(entity);
-					}
-				});
-			}
-
-
+		} catch (error) {
+			entity.GenErrorInfo = error.toString();
+			resolve(entity);
 		}
-
 	});
 }
 

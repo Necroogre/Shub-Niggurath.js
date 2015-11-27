@@ -9,7 +9,6 @@
 <div class="winContainer">
     <form id="formMain">
         <table class="table1">
-            <tr>
       <$ 
         var propertyCount = columns.length;
         var rowCount = parseInt(propertyCount / 2) + 1;
@@ -30,7 +29,6 @@
           print('</tr>')
         }
       $>
-            </tr>
         </table>
         <table class="grid1">
             <thead>
@@ -59,7 +57,7 @@
 </script>
 
 <script type="text/javascript">
-    <$ var nameSpaceTail=_.last(nameSpace.split('.')); var $>
+    <$ var nameSpaceTail=_.last(nameSpace.split('.')); $>
     var simpleSubItemGrid;
     $(function () {
         /*表单数据加载成功的事件处理函数*/
@@ -70,13 +68,13 @@
         //构造simpleGrid（子项）
         var itemTmpl = _.template($('#itemTemplate').html());//添加子数据的模板html
         var newItemDataTmpl = {};//添加子数据项时的模板数据，若不需要则设置为{}
-        var subItemPropertyName=<$print(refEntity.entityName.toLowerCase() + "List")$>;//主数据中的子项属性名称
-        var itemUrl= <$ print('${pageContext.request.contextPath}/api/'+nameSpaceTail+'/'+entityName.toLowerCase()+'/get'+refEntity.entityName.toLowerCase()+'list?id=${model.get("id")[0]}')$>;
+        var subItemPropertyName='<$print(refEntity.entityName.toLowerCase() + "List")$>';//主数据中的子项属性名称
+        var itemUrl= '<$ print('${pageContext.request.contextPath}/api/${modulePath}/get'+refEntity.entityName.toLowerCase()+'list?id=${id}')$>';
         simpleSubItemGrid = new SimpleGrid('tbdItems', itemTmpl, subItemPropertyName, newItemDataTmpl,itemUrl);
         //构造pageform（主数据）
         var easyUIFormParams = {onLoadSuccess: onFormLoadSuccess};//easyui-form 参数
         //获取主数据的api地址，添加表单不需要该地址
-        var masterDataUrl = <$print('${pageContext.request.contextPath}/api/'+nameSpaceTail+'/'+entityName.toLowerCase()+'?id=${model.get("id")[0]}')$>;
+        var masterDataUrl = '<$print('${pageContext.request.contextPath}/api/${modulePath}?id=${id}')$>';
         var formTmpl=null;//formTmpl为null则会用easyui的loadform方法填充表单数据，否则是用formTempl作为模板渲染数据
         var formType='view';//表单类型：view，edit，默认为view
         var pageForm = new PageForm('formMain', masterDataUrl, easyUIFormParams, simpleSubItemGrid, function (data) {}, formTmpl, formType);
