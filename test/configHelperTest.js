@@ -2,7 +2,7 @@ var fs = require('fs');
 var assert = require('assert');
 var _ = require('underscore');
 var config = require('../cfg');
-var sqlserverDataSource_1 = require('../data_source/sqlserverDataSource');
+var sqlServerDataSource_1 = require('../data_source/sqlServerDataSource');
 describe('DataSourceHelper', function () {
     var cfgHelper;
     beforeEach(function () {
@@ -22,21 +22,24 @@ describe('DataSourceHelper', function () {
     });
     describe('#setDataSource', function () {
         it('should return the newly set config obj', function () {
-            var ds = new sqlserverDataSource_1.default('./newOne', {
+            var ds = new sqlServerDataSource_1.default('./newOne', {
                 user: 'sa',
                 password: '123qwe!@#',
                 server: '192.168.2.254',
-                database: 'ehsure.adrp-clean'
+                database: 'ehsure.adrp-clean',
+                nameSpace: 'com.ehsure.test'
             });
+            //console.log('[DEBUG] Test.DataSourceHelper.#setDataSource, ds: ', ds.getConfigObj());
             cfgHelper.setDataSource(ds);
             var ds2 = cfgHelper.getDataSource('./newOne');
             assert.equal(ds2.user, 'sa');
+            assert.equal(ds2.nameSpace, 'com.ehsure.test');
         });
     });
     describe('#getEntities', function () {
         it('should return the selected entity obj', function (done) {
             this.timeout(5000);
-            var ds = new sqlserverDataSource_1.default('./newOne', {
+            var ds = new sqlServerDataSource_1.default('./newOne', {
                 user: 'sa',
                 password: '123qwe!@#',
                 server: '192.168.2.254',

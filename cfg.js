@@ -32,7 +32,7 @@ var DataSourceHelper = (function () {
         else {
             this.dataSources.push(config.getConfigObj());
         }
-        //console.log('[DEBUG] #DataSourceHelper.setDataSource():', config, this.cfgFilePath);
+        //console.log('[DEBUG] #DataSourceHelper.setDataSource():', config.getConfigObj(), this.cfgFilePath);
         fs.writeFileSync(this.cfgFilePath, JSON.stringify(this.dataSources), { encoding: 'utf8' });
     };
     DataSourceHelper.prototype.dataSourceFactory = function (projPath, configObj) {

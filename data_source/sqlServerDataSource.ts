@@ -12,6 +12,7 @@ export default class SqlServerDataSource implements IDataSource {
 	database: string;
 	user: string;
 	password: string;
+	nameSpace: string;
 
 	private sqlConn: mssql.Connection;
 	private sqlCfg: any;
@@ -22,13 +23,14 @@ export default class SqlServerDataSource implements IDataSource {
      * @param  {any} cfgObj 数据源配置 { server, database, user, password }
      */
 	constructor(projPath: string, cfgObj: any) {
-		//console.log('[DEBUG] #SqlServerDataSource.constructor()', projPath, obj);
+		//console.log('[DEBUG] #SqlServerDataSource.constructor()', projPath, cfgObj);
 		this.sqlCfg = {};
 		this.projectPath = this.sqlCfg.projectPath = projPath;
 		this.server = this.server = this.sqlCfg.server = cfgObj.server;
 		this.database = this.sqlCfg.database = cfgObj.database;
 		this.user = this.sqlCfg.user = cfgObj.user;
 		this.password = this.sqlCfg.password = cfgObj.password;
+		this.nameSpace = this.sqlCfg.nameSpace = cfgObj.nameSpace;
 	}
     /**
 	 * 获取数据源配置对象
@@ -40,7 +42,8 @@ export default class SqlServerDataSource implements IDataSource {
 			server: this.server,
 			database: this.database,
 			user: this.user,
-			password: this.password
+			password: this.password,
+			nameSpace: this.nameSpace
 		};
 	}
 

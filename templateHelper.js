@@ -13,17 +13,19 @@ var TemplateHelper = (function () {
     TemplateHelper.prototype.setAbsolutePath = function (tmplObj, rootPath) {
         var cloned = {};
         for (var item in tmplObj) {
-            var clonedItem = _.clone(tmplObj[item]);
-            var relativePath = tmplObj[item].pathName;
-            // console.log('[DEBUG] TemplateHelper.setAbsolutePath: relativePath: ', relativePath);
-            var files = glob.sync(relativePath, { cwd: rootPath });
-            // console.log("files:", files);
-            if (files.length === 0) {
-                throw new Error("Template:" + item + ", 路径不存在");
+            if (tmplObj.hasOwnProperty(item)) {
+                var clonedItem = _.clone(tmplObj[item]);
+                var relativePath = tmplObj[item].pathName;
+                // console.log('[DEBUG] TemplateHelper.setAbsolutePath: relativePath: ', relativePath);
+                var files = glob.sync(relativePath, { cwd: rootPath });
+                // console.log("files:", files);
+                if (files.length === 0) {
+                    throw new Error("Template:" + item + ", 路径不存在");
+                }
+                // console.log('[DEBUG] TemplateHelper.setAbsolutePath: matchedPath: ', files[0]);
+                clonedItem.pathName = path.resolve(path.join(rootPath, files[0]));
+                cloned[item] = clonedItem;
             }
-            // console.log('[DEBUG] TemplateHelper.setAbsolutePath: matchedPath: ', files[0]);
-            clonedItem.pathName = path.resolve(path.join(rootPath, files[0]));
-            cloned[item] = clonedItem;
         }
         return cloned;
     };
@@ -33,8 +35,10 @@ var TemplateHelper = (function () {
         //console.log('[DEBUG] TemplateHelper.getTemplatesByEntity()', tmplObj);
         var cloned = {};
         for (var item in tmplObj) {
-            var clonedItem = _.clone(tmplObj[item]);
-            cloned[item] = clonedItem;
+            if (tmplObj.hasOwnProperty(item)) {
+                var clonedItem = _.clone(tmplObj[item]);
+                cloned[item] = clonedItem;
+            }
         }
         if (entity.references.length > 0) {
             delete cloned.controller;
@@ -55,7 +59,7 @@ var TemplateHelper = (function () {
     
     //根据用户的选择过滤Entity[]
     TemplateHelper.prototype.getEntitiesByNameList = function (entities, nameList) {
-        var list = nameList.map(function (x) { return x.entityName });
+        var list = nameList.map(function (x) { return x.entityName; });
         var result = [];
         for (var i = 0; i < entities.length; i++) {
             var entityName = entities[i].name;
@@ -70,7 +74,7 @@ var TemplateHelper = (function () {
     TemplateHelper.prototype.applyTemplate = function (tmplContent, entity, extensionName, nameSpace) {
         var obj = this.wrapEntity(entity);
         obj.nameSpace = nameSpace;
-        console.log('rebuild entity', obj);
+        //console.log('[DEBUG] TemplateHelper.applyTemplate() rebuild entity', obj);
         var codeContent = '';
         if (extensionName === 'jsp') {
             codeContent = _.template(tmplContent, { interpolate: /<\$=([\s\S]+?)\$>/g, evaluate: /<\$([\s\S]+?)\$>/g })(obj);
@@ -97,13 +101,13 @@ var TemplateHelper = (function () {
             };
             return wrapped;
         });
-        if (entity.references.length) {
+        if (entity.references && entity.references.length) {
             obj.references = entity.references.map(function (refObj) {
                 return {
                     refEntity: _this.wrapEntity(refObj.refEntity),
                     propertyName: refObj.propertyName,
                     refPropertyName: refObj.refPropertyName
-                }
+                };
             });
         } else {
             obj.references = [];

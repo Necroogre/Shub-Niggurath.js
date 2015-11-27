@@ -4,7 +4,7 @@ import * as assert from 'assert';
 import * as _ from 'underscore';
 
 import * as config from '../cfg';
-import SqlServerDataSource from '../data_source/sqlserverDataSource';
+import SqlServerDataSource from '../data_source/sqlServerDataSource';
 
 describe('DataSourceHelper', () => {
 	var cfgHelper: config.DataSourceHelper;
@@ -33,11 +33,14 @@ describe('DataSourceHelper', () => {
 				user: 'sa',
 				password: '123qwe!@#',
 				server: '192.168.2.254',
-				database: 'ehsure.adrp-clean'
+				database: 'ehsure.adrp-clean',
+				nameSpace: 'com.ehsure.test'
 			});
+			//console.log('[DEBUG] Test.DataSourceHelper.#setDataSource, ds: ', ds.getConfigObj());
 			cfgHelper.setDataSource(ds);
 			var ds2 = <SqlServerDataSource>cfgHelper.getDataSource('./newOne');
 			assert.equal(ds2.user, 'sa');
+			assert.equal(ds2.nameSpace, 'com.ehsure.test');
 		});
 	});
 
@@ -60,10 +63,10 @@ describe('DataSourceHelper', () => {
 				var refColumn = _.find(headerEntity.properties, (prop) => {
 					return prop.refEntityName !== null;
 				});
-				
+
 				assert.equal('Detail', refColumn.refEntityName);
 				assert.equal('HeaderId', refColumn.refPropertyName);
-				
+
 				assert.equal(headerEntity.references[0].propertyName, "Id");
 				assert.equal(headerEntity.references[0].refPropertyName, "HeaderId");
 				assert.equal(headerEntity.references[0].refEntity.name, "Detail");

@@ -1,5 +1,6 @@
 /* global it */
 /* global describe */
+/* jshint esnext:true */
 
 
 var mkdirp = require('mkdirp');
@@ -13,7 +14,7 @@ var _ = require('underscore');
 describe('TemplateHelper', function () {
 
   describe('#setAbsolutePath()', function () {
-    it('should return templateObj', function () {
+    it('should return templateObj with absolute path', function () {
       var templateObj = {
         "api": {
           "fileName": "<%= name %>.java",
@@ -29,7 +30,7 @@ describe('TemplateHelper', function () {
   });
 
   describe('#getTemplatesByEntity()', function () {
-    it('should return templateObj', function () {
+    it('should return different for simple entity and header-detail entity', function () {
       var entity = {};
       entity.name = "ConfigHeader";
       entity.references = [];
@@ -52,7 +53,7 @@ describe('TemplateHelper', function () {
 
 
   describe('#getEntitiesByNameList()', function () {
-    it('should return templateObj', function () {
+    it('should filter the entityList by given entities', function () {
       var entity = {};
       entity.name = "ConfigHeader";
       entity.references = [];

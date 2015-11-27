@@ -5,6 +5,7 @@ import Entity from '../model/entity';
  */
 interface IDataSource {
 	projectPath: string;
+	nameSpace: string;
 	getEntities(): Promise<Entity[]>;
 	getConfigObj(): Object;
 }
