@@ -67,6 +67,11 @@ var SqlServerDataSource = (function () {
                         refPropertyName: prop.refPropertyName,
                         refEntity: refEntity
                     });
+                    var refProp = _.findWhere(refEntity.properties, { name: prop.refPropertyName });
+                    if (refProp) {
+                        refProp.refParentEntityName = prop.entityName;
+                        refProp.refParentPropertyName = prop.name;
+                    }
                 }
             });
         });

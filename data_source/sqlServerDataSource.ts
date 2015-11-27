@@ -78,11 +78,16 @@ export default class SqlServerDataSource implements IDataSource {
 				var refEntity = _.findWhere(entities, { name: prop.refEntityName });
 				if (refEntity) {
 					prop.refEntity = refEntity;
-					entity.references.push({ 
-						propertyName: prop.name, 
-						refPropertyName: prop.refPropertyName, 
-						refEntity: refEntity 
+					entity.references.push({
+						propertyName: prop.name,
+						refPropertyName: prop.refPropertyName,
+						refEntity: refEntity
 					});
+					var refProp = _.findWhere(refEntity.properties, { name: prop.refPropertyName });
+					if (refProp) {
+						refProp.refParentEntityName = prop.entityName;
+						refProp.refParentPropertyName = prop.name;
+					}
 				}
 			});
 		});

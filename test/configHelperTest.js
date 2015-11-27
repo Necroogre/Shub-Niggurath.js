@@ -59,6 +59,11 @@ describe('DataSourceHelper', function () {
                 assert.equal(headerEntity.references[0].propertyName, "Id");
                 assert.equal(headerEntity.references[0].refPropertyName, "HeaderId");
                 assert.equal(headerEntity.references[0].refEntity.name, "Detail");
+                var detailEntity = _.findWhere(entities, { name: 'Detail' });
+                assert.equal(detailEntity.primaryKey.name, 'Id');
+                var refParentColumn = _.findWhere(detailEntity.properties, { name: 'HeaderId' });
+                assert.equal(refParentColumn.refParentEntityName, 'Header');
+                assert.equal(refParentColumn.refParentPropertyName, 'Id');
                 done();
             }).catch(done);
         });

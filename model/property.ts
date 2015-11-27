@@ -10,4 +10,6 @@ export default class Property {
 	refEntityName: string;
 	refPropertyName: string;
 	isPrimaryKey: boolean;
+	refParentEntityName: string;
+	refParentPropertyName: string;
 }
