@@ -89,7 +89,7 @@ var TemplateHelper = (function () {
     TemplateHelper.prototype.applyTemplate = function (tmplContent, entity, extensionName, nameSpace) {
         var obj = this.wrapEntity(entity);
         obj.nameSpace = nameSpace;
-        //console.log('[DEBUG] TemplateHelper.applyTemplate() rebuild entity', obj);
+        console.log('[DEBUG] TemplateHelper.applyTemplate() rebuild entity', obj);
         var codeContent = '';
         if (extensionName === 'jsp') {
             codeContent = _.template(tmplContent, { interpolate: /<\$=([\s\S]+?)\$>/g, evaluate: /<\$([\s\S]+?)\$>/g })(obj);
@@ -112,7 +112,9 @@ var TemplateHelper = (function () {
                 precision: prop.precision,
                 length: prop.length,
                 scale: prop.scale,
-                nullable: prop.nullable
+                nullable: prop.nullable,
+                refParentEntityName: prop.refParentEntityName,
+                refParentPropertyName: prop.refParentPropertyName
             };
             return wrapped;
         });

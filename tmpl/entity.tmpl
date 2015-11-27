@@ -1,45 +1,65 @@
 package <%=nameSpace%>.entity;
 
 import com.ehsure.eaf.core.entity.BaseUuidAuditableEnity;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.util.Date;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Spawn by Shub-Niggurath.js on <% print(new Date().toLocaleDateString()) %>
  */
-<% columns.forEach(function (prop) { prop.lowerCaseName=prop.name[0].toLowerCase()+prop.name.slice(1)}) %>
+<% 
+columns.forEach(function (prop) { 
+  prop.lowerCaseName = prop.name[0].toLowerCase()+prop.name.slice(1);
+  if(prop.refParentEntityName && prop.refParentEntityName.length) {
+    prop.lowerCaseRefEntityName=prop.refParentEntityName[0].toLowerCase()+prop.refParentEntityName.slice(1);
+  }
+}) 
+%>
 @Entity
 @Table(name="<% print(_.last(nameSpace.split('.')).toLowerCase())%><%=entityName %>")
 public class <%= entityName %> extends BaseUuidAuditableEnity{
     <% columns.forEach(function (prop) {
-    var lengthTemp=""; if(prop.length!=null){lengthTemp=",length = "+prop.length} 
-    var precisionTemp=""; if(prop.precision!=null){precisionTemp=",precision = "+prop.precision}
-    var scaleTemp=""; if(prop.scale!=null){scaleTemp=",scale = "+prop.scale} %>
-        @Column(nullable = <%=prop.nullable%><%=lengthTemp%><%=precisionTemp%><%=scaleTemp%>)
-        private <%= prop.javaType %> <%= prop.lowerCaseName %>;
-    <% }) %>
+    var lengthTemp=""; if(prop.length!=null){lengthTemp=",length = "+prop.length}if(prop.length==-1){lengthTemp=",length = 4000"} 
+    var precisionTemp=""; if(prop.precision!=null&&prop.precision!=0){precisionTemp=",precision = "+prop.precision}
+    var scaleTemp=""; if(prop.scale!=null&&prop.precision!=0){scaleTemp=",scale = "+prop.scale}
+    console.log("prop.refParentEntityName",prop.refParentEntityName);
+        if(prop.refParentEntityName){
+            print('@ManyToOne\r\n@JoinColumn(name = "'+prop.lowerCaseName+'")\r\n');
+            print('private '+prop.refParentEntityName+' '+prop.lowerCaseRefEntityName+';\r\n')
+        }else{
+            print('@Column(nullable = '+prop.nullable+lengthTemp+precisionTemp+scaleTemp+')\r\n');
+            print('private '+ prop.javaType +' '+ prop.lowerCaseName+ ';\r\n');
+        }
+    }) %>
     <% if(references.length){ 
        for (var i=0;i<references.length ;i++ ) {
            var refEntityName=references[0].refEntity.entityName;
-          print('@OneToMany(cascade = CascadeType.ALL,mappedBy = "'+entityName.toLowerCase()+'")');
-          print('private List<'+refEntityName+'> '+refEntityName.toLowerCase()+'List=new ArrayList<>();');         
+          print('@OneToMany(cascade = CascadeType.ALL,mappedBy = "'+entityName.toLowerCase()+'")\r\n');
+          print('private List<'+refEntityName+'> '+refEntityName.toLowerCase()+'List=new ArrayList<>();\r\n');         
        }
     } %>
 
-    <% columns.forEach(function (prop) { %>
-        /**
-         * <%= prop.desc %>
-         */
-        public <%= prop.javaType %> get<%= prop.name %>(){
-              return <%= prop.lowerCaseName %>;
-        }
-        public void set<%= prop.name %>(<%= prop.javaType %> <%= prop.lowerCaseName %>){
-              this.<%= prop.lowerCaseName %> = <%= prop.lowerCaseName %>;
-        }
-    <% }) %>
+    <% columns.forEach(function (prop) {
+      print('/**\r\n*'+prop.desc+'\r\n*/');
+        if(prop.refParentEntityName){
+          print('public '+prop.refParentEntityName+' get'+prop.refParentEntityName+'(){\r\n');
+          print('      return '+prop.lowerCaseRefEntityName+';\r\n');
+          print('}\r\n');
+          print('public void set'+prop.refParentEntityName+'('+prop.refParentEntityName+' '+prop.lowerCaseRefEntityName+') {\r\n');
+          print('      this.'+prop.lowerCaseRefEntityName+' = '+prop.lowerCaseRefEntityName+';\r\n');
+          print('}');
+        }else{
+          print('public '+prop.javaType+' get'+prop.name+'(){\r\n');
+          print('      return '+prop.lowerCaseName+';\r\n');
+          print('}\r\n');
+          print('public void set'+prop.name+'('+prop.javaType+' '+prop.lowerCaseName+') {\r\n');
+          print('      this.'+prop.lowerCaseName+' = '+prop.lowerCaseName+';\r\n');
+          print('}');
+        }        
+    }) %>
     <% if(references.length){ 
        for (var i=0;i<references.length ;i++ ) {
            var refEntityName=references[0].refEntity.entityName;

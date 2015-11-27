@@ -5,7 +5,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.ehsure.eaf.core.dto.PageReq;
 import com.ehsure.eaf.core.repository.jpa.BaseHibernateRepository;
 import com.ehsure.eaf.core.utils.StringUtil;
-import <%=nameSpace%>.dto.Operator;
 import <%=nameSpace%>.entity.<%=entityName%>;
 import <%=nameSpace%>.repository.<%=entityName%>Repository;
 import org.springframework.data.domain.Page;
@@ -23,7 +22,7 @@ import java.util.Objects;
  */
 <% lowerCaseEntityName = entityName[0].toLowerCase() + entityName.slice(1) %>
 @Repository
-public class <%=entityName%>RepositoryImpl extends BaseEbdRepository<<%=entityName%>> implements <%=entityName%>Repository{
+public class <%=entityName%>RepositoryImpl extends BaseHibernateRepository<<%=entityName%>> implements <%=entityName%>Repository{
 
     /**
      * 根据Code获取<%=entityName%>

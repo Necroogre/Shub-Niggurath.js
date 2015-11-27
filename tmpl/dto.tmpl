@@ -3,12 +3,13 @@ package <%=nameSpace%>.dto;
 import com.ehsure.eaf.core.dto.BaseDTO;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.io.Serializable;
 
 /**
  * Spawn by Shub-Niggurath.js on <% print(new Date().toLocaleDateString()) %>
  */
 <% columns.forEach(function (prop) { prop.lowerCaseName=prop.name[0].toLowerCase()+prop.name.slice(1)}) %>
-public class <%= entityName %>DTO {
+public class <%= entityName %>DTO extends BaseDTO implements Serializable{
     <% columns.forEach(function (prop) {%>
         private <%= prop.javaType %> <%= prop.lowerCaseName %>;
     <% }) %>
