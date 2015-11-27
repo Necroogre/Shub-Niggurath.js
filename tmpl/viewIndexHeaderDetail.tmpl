@@ -1,0 +1,103 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="tag" tagdir="/WEB-INF/tags" %>
+<html>
+<head>
+    <tag:header/>
+</head>
+<body id="main_layout">
+<div id="toolbar">
+    <div class="searchbox-area">
+        <form id="queryForm" action="" method="POST">
+            <table class="searchbox-body searchbox-body-simple">
+      <$ 
+        var propertyCount = columns.length;
+        var rowCount = parseInt(propertyCount / 3) + 1;
+        for (var row = 0; row < rowCount; row ++ ) { 
+          print('<tr>');
+          for (var col = 0; col < 3; col ++) {
+            var index = (row) * 3 + col;
+            
+            if(columns[index]) {
+              print('<th>');
+              print(columns[index].desc + '：');
+              if (!columns[index].nullable) { print('<span class="needStar">*</span>') }
+              print('</th>');
+              print('<td>');
+              print('<input id="' + columns[index].lowerCaseName +'" name="' + columns[index].lowerCaseName + '" type="text" data-qoperator="5" data-qtype="string" />');
+              print('</td>');
+            }
+          } 
+          print('</tr>')
+        }
+      $>               
+            </table>
+            <div class="searchbox-flip">
+                <a href="#" class="easyui-linkbutton" iconcls="icon-search" onclick="doQuery()">查询</a>&nbsp;&nbsp;
+                <a href="#" class="easyui-linkbutton" iconcls="icon-undo" onclick="clearForm()">重置</a>
+            </div>
+        </form>
+    </div>
+    <div class="toolbar-btnBar">
+    </div>
+</div>
+<table id="dg" title=" " fit="true"
+       toolbar="#toolbar" pagination="true" idfield="id" striped="true"
+       rownumbers="true" fitcolumns="true" fixed="true" singleselect="false">
+    <thead>
+    <tr>
+        <th field="ck" checkbox="true"></th>
+            <$
+              for(var i=0;i<columns.length;i++){
+                 print( '<th'+columns[i].name+'>'+columns[i].desc+'</th>' ); 
+              }
+            $>
+    </tr>
+    </thead>
+</table>
+
+<div id="dd"></div>
+
+<script type="text/javascript">
+
+    var page = {};
+    var dataGrid = {};
+    $(function () {
+        page = new ehsure.jothuheim.SimplePage('${pageContext.request.contextPath}', '<$print(_.last(nameSpace.split('.')).toLowerCase())$>/<$print(entityName.toLowerCase())$>', '<$=entityName$>');
+        datagrid = new ehsure.jothuheim.DataGrid($('#dg'), $('#queryForm'), page.getApiUrl('list'));
+        page.setDataGrid(datagrid);
+        datagrid.reload();
+        page.loadBtnBar();
+        datagrid.listen("onDblClickRow", function (index, row) {
+            $(this).datagrid('unselectAll');
+            $(this).datagrid('selectRow', index);
+            page.openView();
+        });
+    });
+
+    function onAdd() {
+        page.openAdd();
+    }
+
+    function onDelete() {
+        page.deleteData();
+    }
+
+    function onView() {
+        page.openView();
+    }
+
+    function onEdit() {
+        page.openEdit();
+    }
+
+    function doQuery() {
+        datagrid.reload();
+    }
+
+    function clearForm() {
+        page.clearQueryForm();
+    }
+
+</script>
+</body>
+</html>

@@ -15,13 +15,13 @@ var TemplateHelper = (function () {
         for (var item in tmplObj) {
             var clonedItem = _.clone(tmplObj[item]);
             var relativePath = tmplObj[item].pathName;
-            console.log('[DEBUG] TemplateHelper.setAbsolutePath: relativePath: ', relativePath);
+            // console.log('[DEBUG] TemplateHelper.setAbsolutePath: relativePath: ', relativePath);
             var files = glob.sync(relativePath, { cwd: rootPath });
             // console.log("files:", files);
             if (files.length === 0) {
                 throw new Error("Template:" + item + ", 路径不存在");
             }
-            console.log('[DEBUG] TemplateHelper.setAbsolutePath: matchedPath: ', files[0]);
+            // console.log('[DEBUG] TemplateHelper.setAbsolutePath: matchedPath: ', files[0]);
             clonedItem.pathName = path.resolve(path.join(rootPath, files[0]));
             cloned[item] = clonedItem;
         }
@@ -31,22 +31,26 @@ var TemplateHelper = (function () {
     //根据Entity是否主从，获取相应的template
     TemplateHelper.prototype.getTemplatesByEntity = function (tmplObj, entity) {
         //console.log('[DEBUG] TemplateHelper.getTemplatesByEntity()', tmplObj);
-        var clone = _.clone(tmplObj);
+        var cloned = {};
+        for (var item in tmplObj) {
+            var clonedItem = _.clone(tmplObj[item]);
+            cloned[item] = clonedItem;
+        }
         if (entity.references.length > 0) {
-            delete clone.controller;
-            delete clone.viewAdd;
-            delete clone.viewDetail;
-            delete clone.viewEdit;
-            delete clone.viewIndex;
+            delete cloned.controller;
+            delete cloned.viewAdd;
+            delete cloned.viewDetail;
+            delete cloned.viewEdit;
+            delete cloned.viewIndex;
         }
         else {
-            delete clone.controllerHeaderDetail;
-            delete clone.viewAddHeaderDetail;
-            delete clone.viewDetailHeaderDetail;
-            delete clone.viewEditHeaderDetail;
-            delete clone.viewIndexHeaderDetail;
+            delete cloned.controllerHeaderDetail;
+            delete cloned.viewAddHeaderDetail;
+            delete cloned.viewDetailHeaderDetail;
+            delete cloned.viewEditHeaderDetail;
+            delete cloned.viewIndexHeaderDetail;
         }
-        return clone;
+        return cloned;
     };
     
     //根据用户的选择过滤Entity[]
@@ -66,7 +70,7 @@ var TemplateHelper = (function () {
     TemplateHelper.prototype.applyTemplate = function (tmplContent, entity, extensionName, nameSpace) {
         var obj = this.wrapEntity(entity);
         obj.nameSpace = nameSpace;
-
+        console.log('rebuild entity', obj);
         var codeContent = '';
         if (extensionName === 'jsp') {
             codeContent = _.template(tmplContent, { interpolate: /<\$=([\s\S]+?)\$>/g, evaluate: /<\$([\s\S]+?)\$>/g })(obj);
@@ -80,6 +84,7 @@ var TemplateHelper = (function () {
         var obj = {};
         var _this = this;
         obj.entityName = entity.name;
+
         obj.columns = entity.properties.map(function (prop) {
             var wrapped = {
                 desc: prop.description,
@@ -90,8 +95,9 @@ var TemplateHelper = (function () {
                 scale: prop.scale,
                 nullable: prop.nullable
             };
+            return wrapped;
         });
-        if (obj.references.length) {
+        if (entity.references.length) {
             obj.references = entity.references.map(function (refObj) {
                 return {
                     refEntity: _this.wrapEntity(refObj.refEntity),
@@ -99,8 +105,12 @@ var TemplateHelper = (function () {
                     refPropertyName: refObj.refPropertyName
                 }
             });
+        } else {
+            obj.references = [];
         }
-
+        if (obj.entityName === 'Detail') {
+            console.log('detail columns:', obj, entity.properties);
+        }
         return obj;
     };
 

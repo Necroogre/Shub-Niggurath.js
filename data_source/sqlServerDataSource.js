@@ -105,5 +105,6 @@ var SqlServerDataSource = (function () {
     };
     return SqlServerDataSource;
 })();
+Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = SqlServerDataSource;
 //# sourceMappingURL=sqlserverDataSource.js.map
