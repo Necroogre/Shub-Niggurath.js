@@ -62,7 +62,7 @@
     var page = {};
     var dataGrid = {};
     $(function () {
-        page = new ehsure.jothuheim.SimplePage('${pageContext.request.contextPath}', '${modulePath}', '<$=entityName$>');
+        page = new ehsure.jothuheim.SimplePage('${pageContext.request.contextPath}', '${modulePath}', '<$ print(entityName.toLowerCase()) $>');
         datagrid = new ehsure.jothuheim.DataGrid($('#dg'), $('#queryForm'), page.getApiUrl('list'));
         page.setDataGrid(datagrid);
         datagrid.reload();

@@ -1,0 +1,11 @@
+    <link rel="stylesheet" href="node_modules\bootstrap\dist\css\bootstrap.min.css">
+	<table class="table">
+		<tr>
+			<th>说明</th>
+			<th>表名</th>
+			<th>类型</th>
+		</tr>
+		<% for(var i=0;i< columns.length;i++){
+		   print('<tr><td>'+columns[i].desc+'</td><td>'+columns[i].name+'</td><td>'+columns[i].dataType+'</td></tr>\r\n');
+		}%>
+	</table>

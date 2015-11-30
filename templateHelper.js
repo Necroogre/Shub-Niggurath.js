@@ -13,6 +13,7 @@ var TemplateHelper = (function () {
     //匹配所有模板绝对路径
     TemplateHelper.prototype.setAbsolutePath = function (tmplObj, rootPath) {
         return new Promise(function (resolve, reject) {
+            console.log("tmplObj",tmplObj);
             var cloned = {};
             var allGlobTask = [];
             for (var item in tmplObj) {
@@ -89,7 +90,7 @@ var TemplateHelper = (function () {
     TemplateHelper.prototype.applyTemplate = function (tmplContent, entity, extensionName, nameSpace) {
         var obj = this.wrapEntity(entity);
         obj.nameSpace = nameSpace;
-        console.log('[DEBUG] TemplateHelper.applyTemplate() rebuild entity', obj);
+        // console.log('[DEBUG] TemplateHelper.applyTemplate() rebuild entity', obj);
         var codeContent = '';
         if (extensionName === 'jsp') {
             codeContent = _.template(tmplContent, { interpolate: /<\$=([\s\S]+?)\$>/g, evaluate: /<\$([\s\S]+?)\$>/g })(obj);
@@ -107,6 +108,7 @@ var TemplateHelper = (function () {
         obj.columns = entity.properties.map(function (prop) {
             var wrapped = {
                 desc: prop.description,
+                dataType:prop.dataType,
                 javaType: sqlTypeDict.java[prop.dataType],
                 name: prop.name,
                 precision: prop.precision,

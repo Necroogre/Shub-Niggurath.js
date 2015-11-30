@@ -28,35 +28,39 @@
     "pathName": "./**/api"
   },
   "viewAdd": {
-    "fileName": "<%= name %>/add.jsp",
-    "pathName": "./**/WEB-INF/views/ebt"
+    "fileName": "<%print(name.toLowerCase()) %>/add.jsp",
+    "pathName": "./**/WEB-INF/views/ebm"
   },
   "viewDetail": {
-    "fileName": "<%= name %>/detail.jsp",
-    "pathName": "./**/WEB-INF/views/ebt"
+    "fileName": "<%print(name.toLowerCase()) %>/detail.jsp",
+    "pathName": "./**/WEB-INF/views/ebm"
   },
   "viewEdit": {
-    "fileName": "<%= name %>/edit.jsp",
-    "pathName": "./**/WEB-INF/views/ebt"
+    "fileName": "<%print(name.toLowerCase()) %>/edit.jsp",
+    "pathName": "./**/WEB-INF/views/ebm"
   },
   "viewIndex": {
-    "fileName": "<%= name %>/index.jsp",
-    "pathName": "./**/WEB-INF/views/ebt"
+    "fileName": "<%print(name.toLowerCase()) %>/index.jsp",
+    "pathName": "./**/WEB-INF/views/ebm"
   },
   "viewAddHeaderDetail": {
-    "fileName": "<%= name %>/add.jsp",
-    "pathName": "./**/WEB-INF/views/ebt"
+    "fileName": "<%print(name.toLowerCase()) %>/add.jsp",
+    "pathName": "./**/WEB-INF/views/ebm"
   },
   "viewDetailHeaderDetail": {
-    "fileName": "<%= name %>/detail.jsp",
-    "pathName": "./**/WEB-INF/views/ebt"
+    "fileName": "<%print(name.toLowerCase()) %>/detail.jsp",
+    "pathName": "./**/WEB-INF/views/ebm"
   },
   "viewEditHeaderDetail": {
-    "fileName": "<%= name %>/edit.jsp",
-    "pathName": "./**/WEB-INF/views/ebt"
+    "fileName": "<%print(name.toLowerCase()) %>/edit.jsp",
+    "pathName": "./**/WEB-INF/views/ebm"
   },
   "viewIndexHeaderDetail": {
-    "fileName": "<%= name %>/index.jsp",
-    "pathName": "./**/WEB-INF/views/ebt"
-  }
+    "fileName": "<% print(name.toLowerCase()) %>/index.jsp",
+    "pathName": "./**/WEB-INF/views/ebm"
+  },
+  "dataDic": {
+    "fileName": "<% print(name.toLowerCase()) %>/dataDic.html",
+    "pathName": "./**/WEB-INF/views/ebm"
+  }  
 }

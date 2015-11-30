@@ -134,7 +134,7 @@ function writeOne(entity, tmplObjAbs, nameSpace) {
 			var tmplContent = fs.readFileSync('./tmpl/' + i + '.tmpl', { encoding: 'utf8' });
 			var extensionName = tmplObjAbsFilt[i].fileName.slice(tmplObjAbsFilt[i].fileName.lastIndexOf('.') + 1);
 			var codeContent = TemplateHelper.applyTemplate(tmplContent, entity, extensionName, nameSpace);
-			console.log('[DEBUG] after applyTemplate()', entity.name, i);
+			// console.log('[DEBUG] after applyTemplate()', entity.name, i);
 			var fullPath = path.join(tmplObjAbsFilt[i].pathName, _.template(tmplObjAbsFilt[i].fileName)(entity));
 			if (!fs.existsSync(path.dirname(fullPath))) {
 				mkdirp.sync(path.dirname(fullPath));

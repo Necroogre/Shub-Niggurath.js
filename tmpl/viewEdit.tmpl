@@ -57,7 +57,7 @@
 
     //构造pageform（主数据）
     var easyUIFormParams={onLoadSuccess:onFormLoadSuccess};
-    var url=<$print("'${pageContext.request.contextPath}/api/ebd/"+ entityName +"?id=${model.id}'")$>;
+    var url=<$print("'${pageContext.request.contextPath}/api/ebd/"+ entityName.toLowerCase() +"?id=${model.id}'")$>;
     var pageForm=new PageForm('formMain',url,easyUIFormParams,null, function(data){
       //主数据请求完后同时得到其子数据，渲染子数据
     },null,'edit');
