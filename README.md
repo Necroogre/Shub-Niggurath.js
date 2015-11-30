@@ -3,7 +3,8 @@
 此处，Shub-Niggurath超强的生殖力象征着代码生成工具强大的生成能力，故引用此名。
 
 ## 1.下载地址
-http://192.168.2.242/toolchains/codegenjs.git
+http://192.168.2.252:8090/pages/viewpage.action?pageId=1868116
+
 ## 2.与IntelliJ集成
 想要更方便的使用此工具？那就在IntelliJ里添加一个外部工具吧！
 ### i. 打开IntelliJ-->File(菜单栏左上角)-->Setting-->Tools-->External Tools-->Add(绿色加号) 
