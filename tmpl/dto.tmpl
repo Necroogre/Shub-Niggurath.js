@@ -8,7 +8,13 @@ import java.io.Serializable;
 /**
  * Spawn by Shub-Niggurath.js on <% print(new Date().toLocaleDateString()) %>
  */
-<% columns.forEach(function (prop) { prop.lowerCaseName=prop.name[0].toLowerCase()+prop.name.slice(1)}) %>
+<% var ignoreList=["addby","addtime","editby","edittime","remark"];
+columns.forEach(function (prop) { 
+    if(_.contains(ignoreList,prop.name.toLowerCase())){
+       columns=_.reject(columns,function(x){ return x==prop});
+    }  
+    prop.lowerCaseName=prop.name[0].toLowerCase()+prop.name.slice(1);
+}) %>
 public class <%= entityName %>DTO extends BaseDTO implements Serializable{
     <% columns.forEach(function (prop) {%>
         private <%= prop.javaType %> <%= prop.lowerCaseName %>;

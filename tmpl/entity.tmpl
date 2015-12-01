@@ -11,8 +11,8 @@ import java.util.List;
  * Spawn by Shub-Niggurath.js on <% print(new Date().toLocaleDateString()) %>
  */
 <% 
+var ignoreList=["id","addby","addtime","editby","edittime","remark"];
 columns.forEach(function (prop) { 
-  var ignoreList=["id","addby","addtime","editby","edittime","remark"];
   if(_.contains(ignoreList,prop.name.toLowerCase())){
     columns=_.reject(columns,function(x){ return x==prop});
   }
