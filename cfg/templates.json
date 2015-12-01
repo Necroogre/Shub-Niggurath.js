@@ -28,39 +28,39 @@
     "pathName": "./**/api"
   },
   "viewAdd": {
-    "fileName": "<%print(name.toLowerCase()) %>/add.jsp",
-    "pathName": "./**/WEB-INF/views/ebm"
+    "fileName": "<% print(_.last(nameSpace.split('.'))) %>/<%print(name.toLowerCase()) %>/add.jsp",
+    "pathName": "./**/WEB-INF/views/"
   },
   "viewDetail": {
-    "fileName": "<%print(name.toLowerCase()) %>/detail.jsp",
-    "pathName": "./**/WEB-INF/views/ebm"
+    "fileName": "<% print(_.last(nameSpace.split('.'))) %>/<%print(name.toLowerCase()) %>/detail.jsp",
+    "pathName": "./**/WEB-INF/views/"
   },
   "viewEdit": {
-    "fileName": "<%print(name.toLowerCase()) %>/edit.jsp",
-    "pathName": "./**/WEB-INF/views/ebm"
+    "fileName": "<% print(_.last(nameSpace.split('.'))) %>/<%print(name.toLowerCase()) %>/edit.jsp",
+    "pathName": "./**/WEB-INF/views/"
   },
   "viewIndex": {
-    "fileName": "<%print(name.toLowerCase()) %>/index.jsp",
-    "pathName": "./**/WEB-INF/views/ebm"
+    "fileName": "<% print(_.last(nameSpace.split('.'))) %>/<%print(name.toLowerCase()) %>/index.jsp",
+    "pathName": "./**/WEB-INF/views/"
   },
   "viewAddHeaderDetail": {
-    "fileName": "<%print(name.toLowerCase()) %>/add.jsp",
-    "pathName": "./**/WEB-INF/views/ebm"
+    "fileName": "<% print(_.last(nameSpace.split('.'))) %>/<%print(name.toLowerCase()) %>/add.jsp",
+    "pathName": "./**/WEB-INF/views/"
   },
   "viewDetailHeaderDetail": {
-    "fileName": "<%print(name.toLowerCase()) %>/detail.jsp",
-    "pathName": "./**/WEB-INF/views/ebm"
+    "fileName": "<% print(_.last(nameSpace.split('.'))) %>/<%print(name.toLowerCase()) %>/detail.jsp",
+    "pathName": "./**/WEB-INF/views/"
   },
   "viewEditHeaderDetail": {
-    "fileName": "<%print(name.toLowerCase()) %>/edit.jsp",
-    "pathName": "./**/WEB-INF/views/ebm"
+    "fileName": "<% print(_.last(nameSpace.split('.'))) %>/<%print(name.toLowerCase()) %>/edit.jsp",
+    "pathName": "./**/WEB-INF/views/"
   },
   "viewIndexHeaderDetail": {
-    "fileName": "<% print(name.toLowerCase()) %>/index.jsp",
-    "pathName": "./**/WEB-INF/views/ebm"
+    "fileName": "<% print(_.last(nameSpace.split('.'))) %>/<% print(name.toLowerCase()) %>/index.jsp",
+    "pathName": "./**/WEB-INF/views/"
   },
   "dataDic": {
-    "fileName": "<% print(name.toLowerCase()) %>/dataDic.html",
-    "pathName": "./**/WEB-INF/views/ebm"
+    "fileName": "<% print(_.last(nameSpace.split('.'))) %>/<% print(name.toLowerCase()) %>/dataDic.html",
+    "pathName": "./**/WEB-INF/views/"
   }  
 }
