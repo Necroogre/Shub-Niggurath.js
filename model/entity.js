@@ -32,5 +32,6 @@ var Entity = (function () {
     };
     return Entity;
 })();
+Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = Entity;
 //# sourceMappingURL=entity.js.map

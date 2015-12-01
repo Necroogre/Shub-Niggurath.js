@@ -41,6 +41,19 @@ describe('DataSourceHelper', () => {
 			var ds2 = <SqlServerDataSource>cfgHelper.getDataSource('./newOne');
 			assert.equal(ds2.user, 'sa');
 			assert.equal(ds2.nameSpace, 'com.ehsure.test');
+
+			var ds3 = new SqlServerDataSource('./newOne', {
+				user: 'sa1',
+				password: '123qwe!@#',
+				server: '192.168.2.255',
+				database: 'ehsure.adrp-clean',
+				nameSpace: 'com.ehsure.test2'
+			});
+			
+			cfgHelper.setDataSource(ds3);
+			var ds4 = <SqlServerDataSource>cfgHelper.getDataSource('./newOne');
+			assert.equal(ds4.user, 'sa1');
+			assert.equal(ds4.nameSpace, 'com.ehsure.test2');
 		});
 	});
 
@@ -70,10 +83,10 @@ describe('DataSourceHelper', () => {
 				assert.equal(headerEntity.references[0].propertyName, "Id");
 				assert.equal(headerEntity.references[0].refPropertyName, "HeaderId");
 				assert.equal(headerEntity.references[0].refEntity.name, "Detail");
-				
+
 				var detailEntity = _.findWhere(entities, { name: 'Detail' });
 				assert.equal(detailEntity.primaryKey.name, 'Id');
-				var refParentColumn = _.findWhere(detailEntity.properties, { name: 'HeaderId'});
+				var refParentColumn = _.findWhere(detailEntity.properties, { name: 'HeaderId' });
 				assert.equal(refParentColumn.refParentEntityName, 'Header');
 				assert.equal(refParentColumn.refParentPropertyName, 'Id');
 

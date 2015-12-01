@@ -1,1 +1,10 @@
-[{"projectPath":"D:/Projects/Java/ebt","server":"192.168.2.254","database":"ebt","user":"sa","password":"123qwe!@#","nameSpace":"com.ehsure.ebt"},{"projectPath":"","server":"192.168.2.254","database":"ebt","user":"sa","password":"123qwe!@#","nameSpace":"com.ehsure.ebt"},{"projectPath":"D:\\Git Project\\ebt","server":"192.168.2.254","database":"ebt","user":"sa","password":"123qwe!@#","nameSpace":"com.ehsure.ebt"},{"projectPath":"D:\\Git Project\\ebm","server":"192.168.2.254","database":"ebt","user":"sa","password":"123qwe!@#","nameSpace":"com.ehsure.ebt"}]
+[
+	{
+		"projectPath": "D:\\Git Project\\ebm",
+		"server": "192.168.2.254",
+		"database": "fcms",
+		"user": "sa",
+		"password": "123qwe!@#",
+		"nameSpace": "com.ehsure.ebm"
+	}
+]

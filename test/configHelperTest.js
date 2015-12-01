@@ -34,6 +34,17 @@ describe('DataSourceHelper', function () {
             var ds2 = cfgHelper.getDataSource('./newOne');
             assert.equal(ds2.user, 'sa');
             assert.equal(ds2.nameSpace, 'com.ehsure.test');
+            var ds3 = new sqlServerDataSource_1.default('./newOne', {
+                user: 'sa1',
+                password: '123qwe!@#',
+                server: '192.168.2.255',
+                database: 'ehsure.adrp-clean',
+                nameSpace: 'com.ehsure.test2'
+            });
+            cfgHelper.setDataSource(ds3);
+            var ds4 = cfgHelper.getDataSource('./newOne');
+            assert.equal(ds4.user, 'sa1');
+            assert.equal(ds4.nameSpace, 'com.ehsure.test2');
         });
     });
     describe('#getEntities', function () {

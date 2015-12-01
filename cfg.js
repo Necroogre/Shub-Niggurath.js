@@ -27,7 +27,10 @@ var DataSourceHelper = (function () {
     DataSourceHelper.prototype.setDataSource = function (config) {
         var existed = _.find(this.dataSources, function (x) { return x.projectPath === config.projectPath; });
         if (existed) {
-            existed = config.getConfigObj();
+            for (var i in config.getConfigObj()) {
+                existed[i] = config.getConfigObj()[i];
+            }
+            ;
         }
         else {
             this.dataSources.push(config.getConfigObj());

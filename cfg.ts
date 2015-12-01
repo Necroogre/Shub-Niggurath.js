@@ -42,7 +42,9 @@ export class DataSourceHelper {
 	setDataSource(config: IDataSource): void {
 		var existed = _.find(this.dataSources, x=> x.projectPath === config.projectPath);
 		if (existed) {
-			existed = config.getConfigObj();
+			for(var i in config.getConfigObj()){
+				existed[i]=config.getConfigObj()[i];
+			};
 		} else {
 			this.dataSources.push(config.getConfigObj());
 		}
