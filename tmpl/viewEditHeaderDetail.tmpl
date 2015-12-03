@@ -61,8 +61,12 @@
 
 <script type="text/template" id="itemTemplate">
     <tr id="item_<@=index@>">
-        <td><input type="hidden" data-name="id" value="<@=item.id@>"/><input type="text" data-name="code" value="<@=item.code@>"/></td>
-        <td><input type="text" data-name="name" value="<@=item.name@>"/></td>
+            <$
+              for(var i=0;i<refProps.length;i++){
+                 var firstLowerName=refProps[i].name[0].toLowerCase()+refProps[i].name.slice(1);
+                 print( '<td><input type="text" data-name="'+firstLowerName+'" value="<@=item.'+firstLowerName+'@>"/></td>\r\n' ); 
+              }
+            $>    
         <td><a href="javascript:void(0)" onclick="simpleSubItemGrid.removeItem('<@=index@>')">删除</a></td>
     </tr>
 </script>
@@ -79,8 +83,8 @@
         var itemTmpl = _.template($('#itemTemplate').html());//添加子数据的模板html
         var newItemDataTmpl = {};//添加子数据项时的模板数据，若不需要则设置为{}
         var subItemPropertyName='<$print(refEntity.entityName.toLowerCase() + 'List')$>';//主数据中的子项属性名称//
-        var itemUrl='<$print('${pageContext.request.contextPath}/api/${modulePath}/get'+refEntity.entityName.toLowerCase()+'itemlist?id=${id}')$>;
-        simpleSubItemGrid = new SimpleGrid('tbdItems', itemTmpl, subItemPropertyName, newItemDataTmpl,itemUrl)';
+        var itemUrl='<$print('${pageContext.request.contextPath}/api/${modulePath}/get'+refEntity.entityName.toLowerCase()+'itemlist?id=${id}')$>';
+        simpleSubItemGrid = new SimpleGrid('tbdItems', itemTmpl, subItemPropertyName, newItemDataTmpl,itemUrl);
         //构造pageform（主数据）
         var easyUIFormParams = {onLoadSuccess: onFormLoadSuccess};//easyui-form 参数
         //获取主数据的api地址，添加表单不需要该地址

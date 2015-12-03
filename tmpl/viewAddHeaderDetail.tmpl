@@ -62,7 +62,8 @@
     <tr id="item_<@=index@>">
     <$
       for(var i=0;i<refProps.length;i++){
-          print( '<td><input type="text" data-name="'+refProps[i].name+'" value="" /></td>' );
+        var firstLowerName=refProps[i].name[0].toLowerCase()+refProps[i].name.slice(1);
+          print( '<td><input type="text" data-name="'+firstLowerName+'" value="" /></td>' );
       }
     $>
     <td><a href="javascript:void(0)" onclick="simpleSubItemGrid.removeItem('<@=index@>')">删除</a></td>
